@@ -8,52 +8,52 @@ package v1alpha1
 
 import xpv1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
 
-// GetCondition of this Rate.
-func (mg *Rate) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+// GetCondition of this ShippingRate.
+func (mg *ShippingRate) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
-// GetDeletionPolicy of this Rate.
-func (mg *Rate) GetDeletionPolicy() xpv1.DeletionPolicy {
+// GetDeletionPolicy of this ShippingRate.
+func (mg *ShippingRate) GetDeletionPolicy() xpv1.DeletionPolicy {
 	return mg.Spec.DeletionPolicy
 }
 
-// GetManagementPolicies of this Rate.
-func (mg *Rate) GetManagementPolicies() xpv1.ManagementPolicies {
+// GetManagementPolicies of this ShippingRate.
+func (mg *ShippingRate) GetManagementPolicies() xpv1.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
-// GetProviderConfigReference of this Rate.
-func (mg *Rate) GetProviderConfigReference() *xpv1.Reference {
+// GetProviderConfigReference of this ShippingRate.
+func (mg *ShippingRate) GetProviderConfigReference() *xpv1.Reference {
 	return mg.Spec.ProviderConfigReference
 }
 
-// GetWriteConnectionSecretToReference of this Rate.
-func (mg *Rate) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
+// GetWriteConnectionSecretToReference of this ShippingRate.
+func (mg *ShippingRate) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
-// SetConditions of this Rate.
-func (mg *Rate) SetConditions(c ...xpv1.Condition) {
+// SetConditions of this ShippingRate.
+func (mg *ShippingRate) SetConditions(c ...xpv1.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
-// SetDeletionPolicy of this Rate.
-func (mg *Rate) SetDeletionPolicy(r xpv1.DeletionPolicy) {
+// SetDeletionPolicy of this ShippingRate.
+func (mg *ShippingRate) SetDeletionPolicy(r xpv1.DeletionPolicy) {
 	mg.Spec.DeletionPolicy = r
 }
 
-// SetManagementPolicies of this Rate.
-func (mg *Rate) SetManagementPolicies(r xpv1.ManagementPolicies) {
+// SetManagementPolicies of this ShippingRate.
+func (mg *ShippingRate) SetManagementPolicies(r xpv1.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
-// SetProviderConfigReference of this Rate.
-func (mg *Rate) SetProviderConfigReference(r *xpv1.Reference) {
+// SetProviderConfigReference of this ShippingRate.
+func (mg *ShippingRate) SetProviderConfigReference(r *xpv1.Reference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
-// SetWriteConnectionSecretToReference of this Rate.
-func (mg *Rate) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
+// SetWriteConnectionSecretToReference of this ShippingRate.
+func (mg *ShippingRate) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }

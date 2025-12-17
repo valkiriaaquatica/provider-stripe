@@ -22,6 +22,7 @@ import (
 	v1alpha1stripeproductfeature "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeproductfeature/v1alpha1"
 	v1alpha1stripepromotioncode "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripepromotioncode/v1alpha1"
 	v1alpha1stripeshippingrate "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeshippingrate/v1alpha1"
+	v1alpha1stripetaxrate "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripetaxrate/v1alpha1"
 	v1alpha1namespaced "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/v1alpha1"
 	v1beta1 "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/v1beta1"
 )
@@ -41,6 +42,7 @@ func init() {
 		v1alpha1stripeproductfeature.SchemeBuilder.AddToScheme,
 		v1alpha1stripepromotioncode.SchemeBuilder.AddToScheme,
 		v1alpha1stripeshippingrate.SchemeBuilder.AddToScheme,
+		v1alpha1stripetaxrate.SchemeBuilder.AddToScheme,
 		v1alpha1namespaced.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
 	)

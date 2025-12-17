@@ -8,52 +8,52 @@ package v1alpha1
 
 import xpv1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
 
-// GetCondition of this Code.
-func (mg *Code) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+// GetCondition of this PromotionCode.
+func (mg *PromotionCode) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
-// GetDeletionPolicy of this Code.
-func (mg *Code) GetDeletionPolicy() xpv1.DeletionPolicy {
+// GetDeletionPolicy of this PromotionCode.
+func (mg *PromotionCode) GetDeletionPolicy() xpv1.DeletionPolicy {
 	return mg.Spec.DeletionPolicy
 }
 
-// GetManagementPolicies of this Code.
-func (mg *Code) GetManagementPolicies() xpv1.ManagementPolicies {
+// GetManagementPolicies of this PromotionCode.
+func (mg *PromotionCode) GetManagementPolicies() xpv1.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
-// GetProviderConfigReference of this Code.
-func (mg *Code) GetProviderConfigReference() *xpv1.Reference {
+// GetProviderConfigReference of this PromotionCode.
+func (mg *PromotionCode) GetProviderConfigReference() *xpv1.Reference {
 	return mg.Spec.ProviderConfigReference
 }
 
-// GetWriteConnectionSecretToReference of this Code.
-func (mg *Code) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
+// GetWriteConnectionSecretToReference of this PromotionCode.
+func (mg *PromotionCode) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
-// SetConditions of this Code.
-func (mg *Code) SetConditions(c ...xpv1.Condition) {
+// SetConditions of this PromotionCode.
+func (mg *PromotionCode) SetConditions(c ...xpv1.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
-// SetDeletionPolicy of this Code.
-func (mg *Code) SetDeletionPolicy(r xpv1.DeletionPolicy) {
+// SetDeletionPolicy of this PromotionCode.
+func (mg *PromotionCode) SetDeletionPolicy(r xpv1.DeletionPolicy) {
 	mg.Spec.DeletionPolicy = r
 }
 
-// SetManagementPolicies of this Code.
-func (mg *Code) SetManagementPolicies(r xpv1.ManagementPolicies) {
+// SetManagementPolicies of this PromotionCode.
+func (mg *PromotionCode) SetManagementPolicies(r xpv1.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
-// SetProviderConfigReference of this Code.
-func (mg *Code) SetProviderConfigReference(r *xpv1.Reference) {
+// SetProviderConfigReference of this PromotionCode.
+func (mg *PromotionCode) SetProviderConfigReference(r *xpv1.Reference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
-// SetWriteConnectionSecretToReference of this Code.
-func (mg *Code) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
+// SetWriteConnectionSecretToReference of this PromotionCode.
+func (mg *PromotionCode) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }

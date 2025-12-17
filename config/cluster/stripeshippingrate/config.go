@@ -6,5 +6,6 @@ import ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 func Configure(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("stripe_shipping_rate", func(r *ujconfig.Resource) {
 		r.ShortGroup = "StripeShippingRate"
+		r.Kind = "ShippingRate"
 	})
 }

@@ -20,8 +20,9 @@ import (
 	price "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeprice/price"
 	product "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeproduct/product"
 	productfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeproductfeature/productfeature"
-	code "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripepromotioncode/code"
-	rate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeshippingrate/rate"
+	promotioncode "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripepromotioncode/promotioncode"
+	shippingrate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeshippingrate/shippingrate"
+	rate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripetaxrate/rate"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
@@ -39,7 +40,8 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		price.Setup,
 		product.Setup,
 		productfeature.Setup,
-		code.Setup,
+		promotioncode.Setup,
+		shippingrate.Setup,
 		rate.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
@@ -64,7 +66,8 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		price.SetupGated,
 		product.SetupGated,
 		productfeature.SetupGated,
-		code.SetupGated,
+		promotioncode.SetupGated,
+		shippingrate.SetupGated,
 		rate.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {

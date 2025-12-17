@@ -1,0 +1,590 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.18.0
+  name: shippingrates.stripeshippingrate.stripe.m.crossplane.io
+spec:
+  group: stripeshippingrate.stripe.m.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - stripe
+    kind: ShippingRate
+    listKind: ShippingRateList
+    plural: shippingrates
+    singular: shippingrate
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ShippingRate is the Schema for the ShippingRates API. The Stripe
+          Shipping Rate can be created, modified and configured by this resource.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ShippingRateSpec defines the desired state of ShippingRate
+            properties:
+              forProvider:
+                properties:
+                  active:
+                    description: |-
+                      Bool. Whether the shipping rate is active (can't be used when creating). Defaults to true.
+                      Whether the shipping rate can be used for new purchases. Defaults to true.
+                    type: boolean
+                  deliveryEstimate:
+                    description: |-
+                      List(Resource). The estimated range for how long shipping will take,
+                      meant to be displayable to the customer. This will appear on CheckoutSessions.
+                      For details please see Delivery Estimate.
+                    items:
+                      properties:
+                        maximum:
+                          description: |-
+                            List(Resource. The upper bound of the estimated range.
+                            Please see Delivery Estimate Definition.
+                          items:
+                            properties:
+                              unit:
+                                description: |-
+                                  String. A unit of time. Possible values hour, day, business_day, week and month.
+                                  The upper bound of the estimated range. If empty, represents no lower bound.
+                                type: string
+                              value:
+                                description: |-
+                                  Int. Must be greater than 0.
+                                  Must be greater than 0.
+                                type: number
+                            type: object
+                          type: array
+                        minimum:
+                          description: |-
+                            List(Resource). The lower bound of the estimated range.
+                            Please see Delivery Estimate Definition.
+                          items:
+                            properties:
+                              unit:
+                                description: |-
+                                  String. A unit of time. Possible values hour, day, business_day, week and month.
+                                  The lower bound of the estimated range. If empty, represents no lower bound.
+                                type: string
+                              value:
+                                description: |-
+                                  Int. Must be greater than 0.
+                                  Must be greater than 0.
+                                type: number
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  displayName:
+                    description: |-
+                      String. The name of the shipping rate, meant to be displayable to the customer.
+                      This will appear on CheckoutSessions.
+                      The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
+                    type: string
+                  fixedAmount:
+                    description: |-
+                      List(Resource). Describes a fixed amount to charge for shipping.
+                      Must be present if type is fixed_amount. For details of individual arguments see Fixed Amount.
+                      Describes a fixed amount to charge for shipping. Must be present for now.
+                    items:
+                      properties:
+                        amount:
+                          description: |-
+                            Int. A non-negative integer in cents representing how much to charge.
+                            A non-negative integer in cents representing how much to charge.
+                          type: number
+                        currency:
+                          description: |-
+                            String. Three-letter ISO currency code, in lowercase - supported currencies.
+                            Three-letter ISO currency code, in lowercase. Must be a supported currency.
+                          type: string
+                        currencyOption:
+                          description: |-
+                            List(Resource). Please see argument details Currency Option
+                            Shipping rates defined in each available currency option. Each key must be a three-letter ISO currency code and a supported currency. For example, to get your shipping rate in eur, fetch the value of the eur key in currency_options. This field is not included by default. To include it in the response, expand the currency_options field.
+                          items:
+                            properties:
+                              amount:
+                                description: |-
+                                  Int. A non-negative integer in cents representing how much to charge.
+                                  A non-negative integer in cents representing how much to charge.
+                                type: number
+                              currency:
+                                description: |-
+                                  String. Three-letter ISO currency code, in lowercase - supported currencies.
+                                  Three-letter ISO currency code, in lowercase. Must be a supported currency.
+                                type: string
+                              taxBehavior:
+                                description: |-
+                                  String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                                  taxes. One of inclusive, exclusive, or unspecified. Once specified it cannot be changed, default is unspecified.
+                                  Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified.
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                      storing additional information about the object in a structured format.
+                      Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  taxBehavior:
+                    description: |-
+                      String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                      taxes. One of inclusive, exclusive, or unspecified. Once specified it cannot be changed, default is unspecified.
+                      Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified.
+                    type: string
+                  taxCode:
+                    description: |-
+                      String. A tax code ID. The Shipping tax code is txcd_92010001.
+                      A tax code ID. The Shipping tax code is txcd_92010001.
+                    type: string
+                  type:
+                    description: |-
+                      String. The type of calculation to use on the shipping rate. Can only be fixed_amount for now.
+                      The type of calculation to use on the shipping rate. Can only be fixed_amount for now
+                    type: string
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  active:
+                    description: |-
+                      Bool. Whether the shipping rate is active (can't be used when creating). Defaults to true.
+                      Whether the shipping rate can be used for new purchases. Defaults to true.
+                    type: boolean
+                  deliveryEstimate:
+                    description: |-
+                      List(Resource). The estimated range for how long shipping will take,
+                      meant to be displayable to the customer. This will appear on CheckoutSessions.
+                      For details please see Delivery Estimate.
+                    items:
+                      properties:
+                        maximum:
+                          description: |-
+                            List(Resource. The upper bound of the estimated range.
+                            Please see Delivery Estimate Definition.
+                          items:
+                            properties:
+                              unit:
+                                description: |-
+                                  String. A unit of time. Possible values hour, day, business_day, week and month.
+                                  The upper bound of the estimated range. If empty, represents no lower bound.
+                                type: string
+                              value:
+                                description: |-
+                                  Int. Must be greater than 0.
+                                  Must be greater than 0.
+                                type: number
+                            type: object
+                          type: array
+                        minimum:
+                          description: |-
+                            List(Resource). The lower bound of the estimated range.
+                            Please see Delivery Estimate Definition.
+                          items:
+                            properties:
+                              unit:
+                                description: |-
+                                  String. A unit of time. Possible values hour, day, business_day, week and month.
+                                  The lower bound of the estimated range. If empty, represents no lower bound.
+                                type: string
+                              value:
+                                description: |-
+                                  Int. Must be greater than 0.
+                                  Must be greater than 0.
+                                type: number
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  displayName:
+                    description: |-
+                      String. The name of the shipping rate, meant to be displayable to the customer.
+                      This will appear on CheckoutSessions.
+                      The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
+                    type: string
+                  fixedAmount:
+                    description: |-
+                      List(Resource). Describes a fixed amount to charge for shipping.
+                      Must be present if type is fixed_amount. For details of individual arguments see Fixed Amount.
+                      Describes a fixed amount to charge for shipping. Must be present for now.
+                    items:
+                      properties:
+                        amount:
+                          description: |-
+                            Int. A non-negative integer in cents representing how much to charge.
+                            A non-negative integer in cents representing how much to charge.
+                          type: number
+                        currency:
+                          description: |-
+                            String. Three-letter ISO currency code, in lowercase - supported currencies.
+                            Three-letter ISO currency code, in lowercase. Must be a supported currency.
+                          type: string
+                        currencyOption:
+                          description: |-
+                            List(Resource). Please see argument details Currency Option
+                            Shipping rates defined in each available currency option. Each key must be a three-letter ISO currency code and a supported currency. For example, to get your shipping rate in eur, fetch the value of the eur key in currency_options. This field is not included by default. To include it in the response, expand the currency_options field.
+                          items:
+                            properties:
+                              amount:
+                                description: |-
+                                  Int. A non-negative integer in cents representing how much to charge.
+                                  A non-negative integer in cents representing how much to charge.
+                                type: number
+                              currency:
+                                description: |-
+                                  String. Three-letter ISO currency code, in lowercase - supported currencies.
+                                  Three-letter ISO currency code, in lowercase. Must be a supported currency.
+                                type: string
+                              taxBehavior:
+                                description: |-
+                                  String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                                  taxes. One of inclusive, exclusive, or unspecified. Once specified it cannot be changed, default is unspecified.
+                                  Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified.
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                      storing additional information about the object in a structured format.
+                      Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  taxBehavior:
+                    description: |-
+                      String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                      taxes. One of inclusive, exclusive, or unspecified. Once specified it cannot be changed, default is unspecified.
+                      Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified.
+                    type: string
+                  taxCode:
+                    description: |-
+                      String. A tax code ID. The Shipping tax code is txcd_92010001.
+                      A tax code ID. The Shipping tax code is txcd_92010001.
+                    type: string
+                  type:
+                    description: |-
+                      String. The type of calculation to use on the shipping rate. Can only be fixed_amount for now.
+                      The type of calculation to use on the shipping rate. Can only be fixed_amount for now
+                    type: string
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  kind: ClusterProviderConfig
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  kind:
+                    description: Kind of the referenced object.
+                    type: string
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.displayName is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.displayName)
+                || (has(self.initProvider) && has(self.initProvider.displayName))'
+            - message: spec.forProvider.fixedAmount is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.fixedAmount)
+                || (has(self.initProvider) && has(self.initProvider.fixedAmount))'
+          status:
+            description: ShippingRateStatus defines the observed state of ShippingRate.
+            properties:
+              atProvider:
+                properties:
+                  active:
+                    description: |-
+                      Bool. Whether the shipping rate is active (can't be used when creating). Defaults to true.
+                      Whether the shipping rate can be used for new purchases. Defaults to true.
+                    type: boolean
+                  deliveryEstimate:
+                    description: |-
+                      List(Resource). The estimated range for how long shipping will take,
+                      meant to be displayable to the customer. This will appear on CheckoutSessions.
+                      For details please see Delivery Estimate.
+                    items:
+                      properties:
+                        maximum:
+                          description: |-
+                            List(Resource. The upper bound of the estimated range.
+                            Please see Delivery Estimate Definition.
+                          items:
+                            properties:
+                              unit:
+                                description: |-
+                                  String. A unit of time. Possible values hour, day, business_day, week and month.
+                                  The upper bound of the estimated range. If empty, represents no lower bound.
+                                type: string
+                              value:
+                                description: |-
+                                  Int. Must be greater than 0.
+                                  Must be greater than 0.
+                                type: number
+                            type: object
+                          type: array
+                        minimum:
+                          description: |-
+                            List(Resource). The lower bound of the estimated range.
+                            Please see Delivery Estimate Definition.
+                          items:
+                            properties:
+                              unit:
+                                description: |-
+                                  String. A unit of time. Possible values hour, day, business_day, week and month.
+                                  The lower bound of the estimated range. If empty, represents no lower bound.
+                                type: string
+                              value:
+                                description: |-
+                                  Int. Must be greater than 0.
+                                  Must be greater than 0.
+                                type: number
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  displayName:
+                    description: |-
+                      String. The name of the shipping rate, meant to be displayable to the customer.
+                      This will appear on CheckoutSessions.
+                      The name of the shipping rate, meant to be displayable to the customer. This will appear on CheckoutSessions.
+                    type: string
+                  fixedAmount:
+                    description: |-
+                      List(Resource). Describes a fixed amount to charge for shipping.
+                      Must be present if type is fixed_amount. For details of individual arguments see Fixed Amount.
+                      Describes a fixed amount to charge for shipping. Must be present for now.
+                    items:
+                      properties:
+                        amount:
+                          description: |-
+                            Int. A non-negative integer in cents representing how much to charge.
+                            A non-negative integer in cents representing how much to charge.
+                          type: number
+                        currency:
+                          description: |-
+                            String. Three-letter ISO currency code, in lowercase - supported currencies.
+                            Three-letter ISO currency code, in lowercase. Must be a supported currency.
+                          type: string
+                        currencyOption:
+                          description: |-
+                            List(Resource). Please see argument details Currency Option
+                            Shipping rates defined in each available currency option. Each key must be a three-letter ISO currency code and a supported currency. For example, to get your shipping rate in eur, fetch the value of the eur key in currency_options. This field is not included by default. To include it in the response, expand the currency_options field.
+                          items:
+                            properties:
+                              amount:
+                                description: |-
+                                  Int. A non-negative integer in cents representing how much to charge.
+                                  A non-negative integer in cents representing how much to charge.
+                                type: number
+                              currency:
+                                description: |-
+                                  String. Three-letter ISO currency code, in lowercase - supported currencies.
+                                  Three-letter ISO currency code, in lowercase. Must be a supported currency.
+                                type: string
+                              taxBehavior:
+                                description: |-
+                                  String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                                  taxes. One of inclusive, exclusive, or unspecified. Once specified it cannot be changed, default is unspecified.
+                                  Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified.
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  id:
+                    description: String. The unique identifier for the object.
+                    type: string
+                  livemode:
+                    description: |-
+                      Bool. Has the value true if the object exists in live mode or the value false if the object exists in test mode.
+                      Has the value true if the object exists in live mode or the value false if the object exists in test mode.
+                    type: boolean
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                      storing additional information about the object in a structured format.
+                      Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  taxBehavior:
+                    description: |-
+                      String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                      taxes. One of inclusive, exclusive, or unspecified. Once specified it cannot be changed, default is unspecified.
+                      Specifies whether the rate is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified.
+                    type: string
+                  taxCode:
+                    description: |-
+                      String. A tax code ID. The Shipping tax code is txcd_92010001.
+                      A tax code ID. The Shipping tax code is txcd_92010001.
+                    type: string
+                  type:
+                    description: |-
+                      String. The type of calculation to use on the shipping rate. Can only be fixed_amount for now.
+                      The type of calculation to use on the shipping rate. Can only be fixed_amount for now
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

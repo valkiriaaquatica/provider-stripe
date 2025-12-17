@@ -1,0 +1,20 @@
+apiVersion: stripetaxrate.stripe.crossplane.io/v1alpha1
+kind: Rate
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripetaxrate/v1alpha1/rate
+  labels:
+    testing.upbound.io/example-name: tax_rate
+  name: tax-rate
+spec:
+  forProvider:
+    active: true
+    country: AU
+    description: GST Australia
+    displayName: GST
+    inclusive: true
+    jurisdiction: AU
+    metadata: {}
+    percentage: 10
+    state: ""
+    taxType: ""
