@@ -13,6 +13,7 @@ import (
 	card "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecard/card"
 	coupon "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecoupon/coupon"
 	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecustomer/customer"
+	feature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeentitlementsfeature/feature"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
@@ -23,6 +24,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		card.Setup,
 		coupon.Setup,
 		customer.Setup,
+		feature.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
@@ -39,6 +41,7 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		card.SetupGated,
 		coupon.SetupGated,
 		customer.SetupGated,
+		feature.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err

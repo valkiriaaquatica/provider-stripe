@@ -9,6 +9,12 @@ import (
 	stripecard "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecard"
 	stripecoupon "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecoupon"
 	stripecustomer "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecustomer"
+	stripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeentitlementsfeature"
+
+	namespacedstripecard "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecard"
+	namespacedstripecoupon "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecoupon"
+	namespacedstripecustomer "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecustomer"
+	namespacedstripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeentitlementsfeature"
 )
 
 const (
@@ -37,6 +43,7 @@ func GetProvider() *ujconfig.Provider {
 		stripecard.Configure,
 		stripecustomer.Configure,
 		stripecoupon.Configure,
+		stripeentitlementsfeature.Configure,
 	} {
 		configure(pc)
 	}
@@ -60,7 +67,10 @@ func GetProviderNamespaced() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		stripecard.Configure,
+		namespacedstripecard.Configure,
+		namespacedstripecustomer.Configure,
+		namespacedstripecoupon.Configure,
+		namespacedstripeentitlementsfeature.Configure,
 	} {
 		configure(pc)
 	}

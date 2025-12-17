@@ -1,4 +1,4 @@
-package stripecard
+package stripecustomer
 
 import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"

@@ -8,9 +8,10 @@ import (
 // provider.
 var ExternalNameConfigs = map[string]config.ExternalName{
 	// Import requires using a randomly generated ID from provider: nl-2e21sda
-	"stripe_card":     idWithStub(),
-	"stripe_customer": idWithStub(),
-	"stripe_coupon":   idWithStub(),
+	"stripe_card":                 idWithStub(),
+	"stripe_customer":             idWithStub(),
+	"stripe_coupon":               idWithStub(),
+	"stripe_entitlements_feature": idWithStub(),
 }
 
 func idWithStub() config.ExternalName {

@@ -10,8 +10,10 @@ package namespaced
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	v1alpha1 "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripe/v1alpha1"
-	v1alpha1stripecard "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripecard/v1alpha1"
+	v1alpha1 "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripecard/v1alpha1"
+	v1alpha1stripecoupon "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripecoupon/v1alpha1"
+	v1alpha1stripecustomer "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripecustomer/v1alpha1"
+	v1alpha1stripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeentitlementsfeature/v1alpha1"
 	v1alpha1namespaced "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/v1alpha1"
 	v1beta1 "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/v1beta1"
 )
@@ -20,7 +22,9 @@ func init() {
 	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
-		v1alpha1stripecard.SchemeBuilder.AddToScheme,
+		v1alpha1stripecoupon.SchemeBuilder.AddToScheme,
+		v1alpha1stripecustomer.SchemeBuilder.AddToScheme,
+		v1alpha1stripeentitlementsfeature.SchemeBuilder.AddToScheme,
 		v1alpha1namespaced.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
 	)

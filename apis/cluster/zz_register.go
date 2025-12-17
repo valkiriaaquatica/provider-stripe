@@ -13,6 +13,7 @@ import (
 	v1alpha1 "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripecard/v1alpha1"
 	v1alpha1stripecoupon "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripecoupon/v1alpha1"
 	v1alpha1stripecustomer "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripecustomer/v1alpha1"
+	v1alpha1stripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripeentitlementsfeature/v1alpha1"
 	v1alpha1cluster "github.com/valkiriaaquatica/provider-stripe/apis/cluster/v1alpha1"
 	v1beta1 "github.com/valkiriaaquatica/provider-stripe/apis/cluster/v1beta1"
 )
@@ -23,6 +24,7 @@ func init() {
 		v1alpha1.SchemeBuilder.AddToScheme,
 		v1alpha1stripecoupon.SchemeBuilder.AddToScheme,
 		v1alpha1stripecustomer.SchemeBuilder.AddToScheme,
+		v1alpha1stripeentitlementsfeature.SchemeBuilder.AddToScheme,
 		v1alpha1cluster.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
 	)

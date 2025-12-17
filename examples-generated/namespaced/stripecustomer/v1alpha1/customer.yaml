@@ -1,0 +1,11 @@
+apiVersion: stripecustomer.stripe.m.crossplane.io/v1alpha1
+kind: Customer
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripecustomer/v1alpha1/customer
+  labels:
+    testing.upbound.io/example-name: customer
+  name: customer
+  namespace: crossplane-system
+spec:
+  forProvider: {}
