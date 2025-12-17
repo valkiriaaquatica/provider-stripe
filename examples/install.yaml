@@ -1,6 +1,6 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: upjet-provider-template
+  name: provider-stripe
 spec:
-  package: xpkg.crossplane.io/crossplane/upjet-provider-template:v0.1.0
+  package: xpkg.crossplane.io/valkiriaaquatica/provider-stripe:v0.1.0

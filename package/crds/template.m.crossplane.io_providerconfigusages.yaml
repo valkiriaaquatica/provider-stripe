@@ -4,14 +4,14 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: providerconfigusages.template.m.crossplane.io
+  name: providerconfigusages.stripe.m.crossplane.io
 spec:
-  group: template.m.crossplane.io
+  group: stripe.m.crossplane.io
   names:
     categories:
     - crossplane
     - provider
-    - template
+    - stripe
     kind: ProviderConfigUsage
     listKind: ProviderConfigUsageList
     plural: providerconfigusages
