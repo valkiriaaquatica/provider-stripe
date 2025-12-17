@@ -3,6 +3,7 @@ package clients
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	"github.com/crossplane/crossplane-runtime/v2/pkg/resource"
 	"github.com/pkg/errors"
@@ -22,6 +23,7 @@ const (
 	errTrackUsage           = "cannot track ProviderConfig usage"
 	errExtractCredentials   = "cannot extract credentials"
 	errUnmarshalCredentials = "cannot unmarshal stripe credentials as JSON"
+	errMissingAPIKey        = "cannot find stripe api_key in provider credentials"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -45,16 +47,29 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		if err != nil {
 			return ps, errors.Wrap(err, errExtractCredentials)
 		}
+
 		creds := map[string]string{}
 		if err := json.Unmarshal(data, &creds); err != nil {
-			return ps, errors.Wrap(err, errUnmarshalCredentials)
+			// Accept raw string credentials (e.g., when sourced directly from an
+			// environment variable or a single-value secret).
+			creds["api_key"] = strings.TrimSpace(string(data))
 		}
 
-		// Set credentials in Terraform provider configuration.
-		/*ps.Configuration = map[string]any{
-			"username": creds["username"],
-			"password": creds["password"],
-		}*/
+		apiKey := strings.TrimSpace(creds["api_key"])
+		if apiKey == "" {
+			apiKey = strings.TrimSpace(creds["STRIPE_API_KEY"])
+		}
+		if apiKey == "" {
+			return ps, errors.New(errMissingAPIKey)
+		}
+
+		// Configure the Terraform provider with the current Stripe authentication
+		// model: the `api_key` argument (or STRIPE_API_KEY env) holds the secret
+		// key. We inject it directly so users can supply it via ProviderConfig
+		// credentials.
+		ps.Configuration = map[string]any{
+			"api_key": apiKey,
+		}
 		return ps, nil
 	}
 }

@@ -7,6 +7,7 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
 	stripecard "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecard"
+	stripecustomer "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecustomer"
 )
 
 const (
@@ -33,6 +34,7 @@ func GetProvider() *ujconfig.Provider {
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
 		stripecard.Configure,
+		stripecustomer.Configure,
 	} {
 		configure(pc)
 	}
@@ -56,7 +58,7 @@ func GetProviderNamespaced() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		//stripecard.Configure,
+		stripecard.Configure,
 	} {
 		configure(pc)
 	}

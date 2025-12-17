@@ -7,8 +7,8 @@ import (
 
 // Configure configures resources for the virtual environment group
 func Configure(p *ujconfig.Provider) {
-	p.AddResourceConfigurator("stripe_card", func(r *ujconfig.Resource) {
-		r.ShortGroup = "StripeCard"
+	p.AddResourceConfigurator("stripe_customer", func(r *ujconfig.Resource) {
+		r.ShortGroup = "StripeCustomer"
 
 		// The provider marks CVC as sensitive but defines it as a number,
 		// which upjet cannot map to a Secret. Treat it as a string to

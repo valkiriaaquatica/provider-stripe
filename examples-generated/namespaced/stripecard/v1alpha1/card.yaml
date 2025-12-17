@@ -1,0 +1,21 @@
+apiVersion: stripecard.stripe.m.crossplane.io/v1alpha1
+kind: Card
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripecard/v1alpha1/card
+  labels:
+    testing.upbound.io/example-name: card
+  name: card
+  namespace: crossplane-system
+spec:
+  forProvider:
+    customer: ${stripe_customer.customer.id}
+    cvcSecretRef:
+      key: example-key
+      name: example-secret
+    expMonth: 8
+    expYear: 2030
+    name: Lukas Aron
+    numberSecretRef:
+      key: example-key
+      name: example-secret

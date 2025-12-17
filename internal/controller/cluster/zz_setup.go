@@ -9,16 +9,18 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
-	resource "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/null/resource"
 	providerconfig "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/providerconfig"
+	card "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecard/card"
+	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecustomer/customer"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.Setup,
 		providerconfig.Setup,
+		card.Setup,
+		customer.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
@@ -31,8 +33,9 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 // the supplied manager gated.
 func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.SetupGated,
 		providerconfig.SetupGated,
+		card.SetupGated,
+		customer.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
