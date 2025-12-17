@@ -6,8 +6,7 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
-	nullCluster "github.com/valkiriaaquatica/provider-stripe/config/cluster/null"
-	nullNamespaced "github.com/valkiriaaquatica/provider-stripe/config/namespaced/null"
+	stripecard "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecard"
 )
 
 const (
@@ -33,7 +32,7 @@ func GetProvider() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		nullCluster.Configure,
+		stripecard.Configure,
 	} {
 		configure(pc)
 	}
@@ -57,7 +56,7 @@ func GetProviderNamespaced() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		nullNamespaced.Configure,
+		//stripecard.Configure,
 	} {
 		configure(pc)
 	}
