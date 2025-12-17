@@ -4,7 +4,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.18.0
-  name: features.stripeproductfeature.stripe.m.crossplane.io
+  name: productfeatures.stripeproductfeature.stripe.m.crossplane.io
 spec:
   group: stripeproductfeature.stripe.m.crossplane.io
   names:
@@ -12,10 +12,10 @@ spec:
     - crossplane
     - managed
     - stripe
-    kind: Feature
-    listKind: FeatureList
-    plural: features
-    singular: feature
+    kind: ProductFeature
+    listKind: ProductFeatureList
+    plural: productfeatures
+    singular: productfeature
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Feature is the Schema for the Features API. <no value>
+        description: ProductFeature is the Schema for the ProductFeatures API. <no
+          value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +55,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: FeatureSpec defines the desired state of Feature
+            description: ProductFeatureSpec defines the desired state of ProductFeature
             properties:
               forProvider:
                 properties:
@@ -157,7 +158,7 @@ spec:
                 || ''Update'' in self.managementPolicies) || has(self.forProvider.product)
                 || (has(self.initProvider) && has(self.initProvider.product))'
           status:
-            description: FeatureStatus defines the observed state of Feature.
+            description: ProductFeatureStatus defines the observed state of ProductFeature.
             properties:
               atProvider:
                 properties:

@@ -14,7 +14,7 @@ import (
 	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 )
 
-type FeatureInitParameters struct {
+type EntitlementsFeatureInitParameters struct {
 
 	// A unique key you provide as your own system identifier. This may be up to 80 characters.
 	LookupKey *string `json:"lookupKey,omitempty" tf:"lookup_key,omitempty"`
@@ -27,7 +27,7 @@ type FeatureInitParameters struct {
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 }
 
-type FeatureObservation struct {
+type EntitlementsFeatureObservation struct {
 
 	// Inactive features cannot be attached to new products and will not be returned from the features list endpoint.
 	Active *bool `json:"active,omitempty" tf:"active,omitempty"`
@@ -54,7 +54,7 @@ type FeatureObservation struct {
 	Object *string `json:"object,omitempty" tf:"object,omitempty"`
 }
 
-type FeatureParameters struct {
+type EntitlementsFeatureParameters struct {
 
 	// A unique key you provide as your own system identifier. This may be up to 80 characters.
 	// +kubebuilder:validation:Optional
@@ -70,10 +70,10 @@ type FeatureParameters struct {
 	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 }
 
-// FeatureSpec defines the desired state of Feature
-type FeatureSpec struct {
+// EntitlementsFeatureSpec defines the desired state of EntitlementsFeature
+type EntitlementsFeatureSpec struct {
 	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            FeatureParameters `json:"forProvider"`
+	ForProvider            EntitlementsFeatureParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -84,51 +84,51 @@ type FeatureSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider FeatureInitParameters `json:"initProvider,omitempty"`
+	InitProvider EntitlementsFeatureInitParameters `json:"initProvider,omitempty"`
 }
 
-// FeatureStatus defines the observed state of Feature.
-type FeatureStatus struct {
+// EntitlementsFeatureStatus defines the observed state of EntitlementsFeature.
+type EntitlementsFeatureStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        FeatureObservation `json:"atProvider,omitempty"`
+	AtProvider        EntitlementsFeatureObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Feature is the Schema for the Features API. The Stripe Product Feature can be created, configured and removed by this resource.
+// EntitlementsFeature is the Schema for the EntitlementsFeatures API. The Stripe Product Feature can be created, configured and removed by this resource.
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,stripe}
-type Feature struct {
+type EntitlementsFeature struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.lookupKey) || (has(self.initProvider) && has(self.initProvider.lookupKey))",message="spec.forProvider.lookupKey is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
-	Spec   FeatureSpec   `json:"spec"`
-	Status FeatureStatus `json:"status,omitempty"`
+	Spec   EntitlementsFeatureSpec   `json:"spec"`
+	Status EntitlementsFeatureStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// FeatureList contains a list of Features
-type FeatureList struct {
+// EntitlementsFeatureList contains a list of EntitlementsFeatures
+type EntitlementsFeatureList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Feature `json:"items"`
+	Items           []EntitlementsFeature `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	Feature_Kind             = "Feature"
-	Feature_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Feature_Kind}.String()
-	Feature_KindAPIVersion   = Feature_Kind + "." + CRDGroupVersion.String()
-	Feature_GroupVersionKind = CRDGroupVersion.WithKind(Feature_Kind)
+	EntitlementsFeature_Kind             = "EntitlementsFeature"
+	EntitlementsFeature_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: EntitlementsFeature_Kind}.String()
+	EntitlementsFeature_KindAPIVersion   = EntitlementsFeature_Kind + "." + CRDGroupVersion.String()
+	EntitlementsFeature_GroupVersionKind = CRDGroupVersion.WithKind(EntitlementsFeature_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&Feature{}, &FeatureList{})
+	SchemeBuilder.Register(&EntitlementsFeature{}, &EntitlementsFeatureList{})
 }

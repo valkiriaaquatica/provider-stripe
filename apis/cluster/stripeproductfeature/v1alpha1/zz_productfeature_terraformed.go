@@ -14,18 +14,18 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/resource/json"
 )
 
-// GetTerraformResourceType returns Terraform resource type for this Feature
-func (mg *Feature) GetTerraformResourceType() string {
-	return "stripe_entitlements_feature"
+// GetTerraformResourceType returns Terraform resource type for this ProductFeature
+func (mg *ProductFeature) GetTerraformResourceType() string {
+	return "stripe_product_feature"
 }
 
-// GetConnectionDetailsMapping for this Feature
-func (tr *Feature) GetConnectionDetailsMapping() map[string]string {
+// GetConnectionDetailsMapping for this ProductFeature
+func (tr *ProductFeature) GetConnectionDetailsMapping() map[string]string {
 	return nil
 }
 
-// GetObservation of this Feature
-func (tr *Feature) GetObservation() (map[string]any, error) {
+// GetObservation of this ProductFeature
+func (tr *ProductFeature) GetObservation() (map[string]any, error) {
 	o, err := json.TFParser.Marshal(tr.Status.AtProvider)
 	if err != nil {
 		return nil, err
@@ -34,8 +34,8 @@ func (tr *Feature) GetObservation() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(o, &base)
 }
 
-// SetObservation for this Feature
-func (tr *Feature) SetObservation(obs map[string]any) error {
+// SetObservation for this ProductFeature
+func (tr *ProductFeature) SetObservation(obs map[string]any) error {
 	p, err := json.TFParser.Marshal(obs)
 	if err != nil {
 		return err
@@ -43,16 +43,16 @@ func (tr *Feature) SetObservation(obs map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Status.AtProvider)
 }
 
-// GetID returns ID of underlying Terraform resource of this Feature
-func (tr *Feature) GetID() string {
+// GetID returns ID of underlying Terraform resource of this ProductFeature
+func (tr *ProductFeature) GetID() string {
 	if tr.Status.AtProvider.ID == nil {
 		return ""
 	}
 	return *tr.Status.AtProvider.ID
 }
 
-// GetParameters of this Feature
-func (tr *Feature) GetParameters() (map[string]any, error) {
+// GetParameters of this ProductFeature
+func (tr *ProductFeature) GetParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.ForProvider)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (tr *Feature) GetParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// SetParameters for this Feature
-func (tr *Feature) SetParameters(params map[string]any) error {
+// SetParameters for this ProductFeature
+func (tr *ProductFeature) SetParameters(params map[string]any) error {
 	p, err := json.TFParser.Marshal(params)
 	if err != nil {
 		return err
@@ -70,8 +70,8 @@ func (tr *Feature) SetParameters(params map[string]any) error {
 	return json.TFParser.Unmarshal(p, &tr.Spec.ForProvider)
 }
 
-// GetInitParameters of this Feature
-func (tr *Feature) GetInitParameters() (map[string]any, error) {
+// GetInitParameters of this ProductFeature
+func (tr *ProductFeature) GetInitParameters() (map[string]any, error) {
 	p, err := json.TFParser.Marshal(tr.Spec.InitProvider)
 	if err != nil {
 		return nil, err
@@ -80,8 +80,8 @@ func (tr *Feature) GetInitParameters() (map[string]any, error) {
 	return base, json.TFParser.Unmarshal(p, &base)
 }
 
-// GetInitParameters of this Feature
-func (tr *Feature) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
+// GetInitParameters of this ProductFeature
+func (tr *ProductFeature) GetMergedParameters(shouldMergeInitProvider bool) (map[string]any, error) {
 	params, err := tr.GetParameters()
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot get parameters for resource \"%s/%s\"", tr.GetNamespace(), tr.GetName())
@@ -110,10 +110,10 @@ func (tr *Feature) GetMergedParameters(shouldMergeInitProvider bool) (map[string
 	return params, nil
 }
 
-// LateInitialize this Feature using its observed tfState.
+// LateInitialize this ProductFeature using its observed tfState.
 // returns True if there are any spec changes for the resource.
-func (tr *Feature) LateInitialize(attrs []byte) (bool, error) {
-	params := &FeatureParameters{}
+func (tr *ProductFeature) LateInitialize(attrs []byte) (bool, error) {
+	params := &ProductFeatureParameters{}
 	if err := json.TFParser.Unmarshal(attrs, params); err != nil {
 		return false, errors.Wrap(err, "failed to unmarshal Terraform state parameters for late-initialization")
 	}
@@ -124,6 +124,6 @@ func (tr *Feature) LateInitialize(attrs []byte) (bool, error) {
 }
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
-func (tr *Feature) GetTerraformSchemaVersion() int {
+func (tr *ProductFeature) GetTerraformSchemaVersion() int {
 	return 0
 }

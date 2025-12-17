@@ -11,10 +11,9 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 )
 
-type FeatureInitParameters struct {
+type ProductFeatureInitParameters struct {
 
 	// The ID of the Entitlements Feature the product will be attached to
 	EntitlementsFeature *string `json:"entitlementsFeature,omitempty" tf:"entitlements_feature,omitempty"`
@@ -23,7 +22,7 @@ type FeatureInitParameters struct {
 	Product *string `json:"product,omitempty" tf:"product,omitempty"`
 }
 
-type FeatureObservation struct {
+type ProductFeatureObservation struct {
 
 	// The ID of the Entitlements Feature the product will be attached to
 	EntitlementsFeature *string `json:"entitlementsFeature,omitempty" tf:"entitlements_feature,omitempty"`
@@ -40,7 +39,7 @@ type FeatureObservation struct {
 	Product *string `json:"product,omitempty" tf:"product,omitempty"`
 }
 
-type FeatureParameters struct {
+type ProductFeatureParameters struct {
 
 	// The ID of the Entitlements Feature the product will be attached to
 	// +kubebuilder:validation:Optional
@@ -51,10 +50,10 @@ type FeatureParameters struct {
 	Product *string `json:"product,omitempty" tf:"product,omitempty"`
 }
 
-// FeatureSpec defines the desired state of Feature
-type FeatureSpec struct {
-	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            FeatureParameters `json:"forProvider"`
+// ProductFeatureSpec defines the desired state of ProductFeature
+type ProductFeatureSpec struct {
+	v1.ResourceSpec `json:",inline"`
+	ForProvider     ProductFeatureParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -65,51 +64,51 @@ type FeatureSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider FeatureInitParameters `json:"initProvider,omitempty"`
+	InitProvider ProductFeatureInitParameters `json:"initProvider,omitempty"`
 }
 
-// FeatureStatus defines the observed state of Feature.
-type FeatureStatus struct {
+// ProductFeatureStatus defines the observed state of ProductFeature.
+type ProductFeatureStatus struct {
 	v1.ResourceStatus `json:",inline"`
-	AtProvider        FeatureObservation `json:"atProvider,omitempty"`
+	AtProvider        ProductFeatureObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// Feature is the Schema for the Features API. <no value>
+// ProductFeature is the Schema for the ProductFeatures API. <no value>
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,stripe}
-type Feature struct {
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,stripe}
+type ProductFeature struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.entitlementsFeature) || (has(self.initProvider) && has(self.initProvider.entitlementsFeature))",message="spec.forProvider.entitlementsFeature is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.product) || (has(self.initProvider) && has(self.initProvider.product))",message="spec.forProvider.product is a required parameter"
-	Spec   FeatureSpec   `json:"spec"`
-	Status FeatureStatus `json:"status,omitempty"`
+	Spec   ProductFeatureSpec   `json:"spec"`
+	Status ProductFeatureStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// FeatureList contains a list of Features
-type FeatureList struct {
+// ProductFeatureList contains a list of ProductFeatures
+type ProductFeatureList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Feature `json:"items"`
+	Items           []ProductFeature `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	Feature_Kind             = "Feature"
-	Feature_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: Feature_Kind}.String()
-	Feature_KindAPIVersion   = Feature_Kind + "." + CRDGroupVersion.String()
-	Feature_GroupVersionKind = CRDGroupVersion.WithKind(Feature_Kind)
+	ProductFeature_Kind             = "ProductFeature"
+	ProductFeature_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: ProductFeature_Kind}.String()
+	ProductFeature_KindAPIVersion   = ProductFeature_Kind + "." + CRDGroupVersion.String()
+	ProductFeature_GroupVersionKind = CRDGroupVersion.WithKind(ProductFeature_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&Feature{}, &FeatureList{})
+	SchemeBuilder.Register(&ProductFeature{}, &ProductFeatureList{})
 }

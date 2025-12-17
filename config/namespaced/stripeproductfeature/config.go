@@ -6,5 +6,6 @@ import ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 func Configure(p *ujconfig.Provider) {
 	p.AddResourceConfigurator("stripe_product_feature", func(r *ujconfig.Resource) {
 		r.ShortGroup = "StripeProductFeature"
+		r.Kind = "ProductFeature"
 	})
 }

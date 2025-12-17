@@ -13,13 +13,13 @@ import (
 	card "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripecard/card"
 	coupon "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripecoupon/coupon"
 	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripecustomer/customer"
-	feature "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeentitlementsfeature/feature"
+	entitlementsfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeentitlementsfeature/entitlementsfeature"
 	file "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripefile/file"
 	meter "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripemeter/meter"
 	configuration "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeportalconfiguration/configuration"
 	price "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeprice/price"
 	product "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeproduct/product"
-	featurestripeproductfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeproductfeature/feature"
+	productfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeproductfeature/productfeature"
 	code "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripepromotioncode/code"
 	rate "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeshippingrate/rate"
 )
@@ -32,13 +32,13 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		card.Setup,
 		coupon.Setup,
 		customer.Setup,
-		feature.Setup,
+		entitlementsfeature.Setup,
 		file.Setup,
 		meter.Setup,
 		configuration.Setup,
 		price.Setup,
 		product.Setup,
-		featurestripeproductfeature.Setup,
+		productfeature.Setup,
 		code.Setup,
 		rate.Setup,
 	} {
@@ -57,13 +57,13 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		card.SetupGated,
 		coupon.SetupGated,
 		customer.SetupGated,
-		feature.SetupGated,
+		entitlementsfeature.SetupGated,
 		file.SetupGated,
 		meter.SetupGated,
 		configuration.SetupGated,
 		price.SetupGated,
 		product.SetupGated,
-		featurestripeproductfeature.SetupGated,
+		productfeature.SetupGated,
 		code.SetupGated,
 		rate.SetupGated,
 	} {

@@ -13,13 +13,13 @@ import (
 	card "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecard/card"
 	coupon "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecoupon/coupon"
 	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecustomer/customer"
-	feature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeentitlementsfeature/feature"
+	entitlementsfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeentitlementsfeature/entitlementsfeature"
 	file "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripefile/file"
 	meter "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripemeter/meter"
 	configuration "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeportalconfiguration/configuration"
 	price "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeprice/price"
 	product "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeproduct/product"
-	featurestripeproductfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeproductfeature/feature"
+	productfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeproductfeature/productfeature"
 	code "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripepromotioncode/code"
 	rate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeshippingrate/rate"
 )
@@ -32,13 +32,13 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		card.Setup,
 		coupon.Setup,
 		customer.Setup,
-		feature.Setup,
+		entitlementsfeature.Setup,
 		file.Setup,
 		meter.Setup,
 		configuration.Setup,
 		price.Setup,
 		product.Setup,
-		featurestripeproductfeature.Setup,
+		productfeature.Setup,
 		code.Setup,
 		rate.Setup,
 	} {
@@ -57,13 +57,13 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		card.SetupGated,
 		coupon.SetupGated,
 		customer.SetupGated,
-		feature.SetupGated,
+		entitlementsfeature.SetupGated,
 		file.SetupGated,
 		meter.SetupGated,
 		configuration.SetupGated,
 		price.SetupGated,
 		product.SetupGated,
-		featurestripeproductfeature.SetupGated,
+		productfeature.SetupGated,
 		code.SetupGated,
 		rate.SetupGated,
 	} {
