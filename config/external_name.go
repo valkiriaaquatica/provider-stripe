@@ -21,6 +21,7 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"stripe_promotion_code":       idWithStub(),
 	"stripe_shipping_rate":        idWithStub(),
 	"stripe_tax_rate":             idWithStub(),
+	"stripe_webhook_endpoint":     idWithStub(),
 }
 
 func idWithStub() config.ExternalName {

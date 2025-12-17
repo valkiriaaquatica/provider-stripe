@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-stripe
 spec:
-  package: xpkg.crossplane.io/valkiriaaquatica/provider-stripe:v0.1.0
+  package: xpkg.upbound.io/valkiriaaquaticamendi/provider-stripe:v0.1.0

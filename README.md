@@ -1,42 +1,80 @@
-# Provider STRIPE
+# Stripe Provider
 
-`provider-stripe` is a [Crossplane](https://crossplane.io/) provider
-stripe that is built using [Upjet](https://github.com/crossplane/upjet) code
-generation tools and exposes XRM-conformant managed resources for the STRIPE
-API.
+`provider-stripe` is a [Crossplane](https://crossplane.io/) provider built with [Upjet](https://github.com/crossplane/upjet). It exposes XRM-conformant managed resources for the Stripe API.
 
-## Getting Started
+## 🚀 Release Automation
 
-This stripe serves as a starting point for generating a new [Crossplane Provider](https://docs.crossplane.io/latest/packages/providers/) using the [`upjet`](https://github.com/crossplane/upjet) tooling. Please follow the guide linked below to generate a new Provider:
+This repository automatically publishes a new release when the upstream Terraform provider releases a new version:
+👉 **Original Terraform Provider:** [lukasaron/terraform-provider-stripe](https://github.com/lukasaron/terraform-provider-stripe)
 
-https://github.com/crossplane/upjet/blob/main/docs/generating-a-provider.md
+The automation pipeline works as follows:
 
-## Developing
+1. **Version Detection** – Handled by our Renovate configuration, which tracks new upstream releases.
+2. **Version Preparation** – When Renovate opens a PR, our GitHub Actions workflow prepares the next version/tag.
+3. **Automated Publishing** – Once the PR is merged, Release Please generates the changelog and publishes the release.
 
-Run code-generation pipeline:
-```console
-go run cmd/generator/main.go "$PWD"
+Thanks to this pipeline, the provider stays aligned with upstream without manual intervention.
+
+## Installation
+
+Make sure Crossplane is installed in your cluster.
+
+- Using `up` (CLI):
+  ```bash
+  up ctp provider install xpkg.upbound.io/valkiriaaquaticamendi/provider-stripe:v0.1.0
+  ```
+- Declarative:
+  ```bash
+  cat <<EOF | kubectl apply -f -
+  apiVersion: pkg.crossplane.io/v1
+  kind: Provider
+  metadata:
+    name: valkiriaaquaticamendi-provider-stripe
+  spec:
+    package: xpkg.upbound.io/valkiriaaquaticamendi/provider-stripe:v0.1.0
+  EOF
+  ```
+  or
+  ```bash
+  kubectl apply -f examples/install.yaml
+  ```
+
+Create the secret with your Stripe API key:
+```bash
+vi examples/providerconfig/secret.yaml.tmpl
+kubectl apply -f examples/providerconfig/secret.yaml.tmpl
 ```
 
-Run against a Kubernetes cluster:
-
-```console
-make run
+Create the ProviderConfig using that secret:
+```bash
+kubectl apply -f examples/providerconfig/providerconfig.yaml
 ```
 
-Build, push, and install:
+In `examples/` and `examples-generated/` you will find reference manifests for both cluster-scoped and namespaced resources. The `test/` folder contains quick validation samples (e.g., `coupon`, `file`, `meter`, `portal_configuration`, `product`, `product_feature`, `promotion_code`, `shipping_rate`, `tax_rate`, `webhook_endpoint`, etc.).
 
-```console
-make all
-```
+## Development
 
-Build binary:
-
-```console
-make build
-```
+- Generate code:
+  ```bash
+  make generate
+  ```
+- Install CRDs into the cluster:
+  ```bash
+  kubectl apply -f package/crds/
+  ```
+- Run the controller against a cluster with Crossplane:
+  ```bash
+  make run
+  ```
+- Tests:
+  ```bash
+  make test
+  ```
+- Build image:
+  ```bash
+  make build
+  ```
 
 ## Report a Bug
 
-For filing bugs, suggesting improvements, or requesting new features, please
-open an [issue](https://github.com/valkiriaaquatica/provider-stripe/issues).
+For bugs, improvements, or new feature requests, please open an [issue](https://github.com/valkiriaaquatica/provider-stripe/issues).

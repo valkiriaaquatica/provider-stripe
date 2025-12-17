@@ -23,6 +23,7 @@ import (
 	promotioncode "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripepromotioncode/promotioncode"
 	shippingrate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeshippingrate/shippingrate"
 	rate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripetaxrate/rate"
+	webhookendpoint "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripewebhookendpoint/webhookendpoint"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
@@ -43,6 +44,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		promotioncode.Setup,
 		shippingrate.Setup,
 		rate.Setup,
+		webhookendpoint.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
@@ -69,6 +71,7 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		promotioncode.SetupGated,
 		shippingrate.SetupGated,
 		rate.SetupGated,
+		webhookendpoint.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err

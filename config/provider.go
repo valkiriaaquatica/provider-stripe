@@ -19,6 +19,7 @@ import (
 	stripepromotioncode "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripepromotioncode"
 	stripeshippingrate "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeshippingrate"
 	stripetaxrate "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripetaxrate"
+	stripewebhookendpoint "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripewebhookendpoint"
 
 	namespacedstripecard "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecard"
 	namespacedstripecoupon "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecoupon"
@@ -33,6 +34,7 @@ import (
 	namespacedstripepromotioncode "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripepromotioncode"
 	namespacedstripeshippingrate "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeshippingrate"
 	namespacedstripetaxrate "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripetaxrate"
+	namespacedstripewebhookendpoint "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripewebhookendpoint"
 )
 
 const (
@@ -71,6 +73,7 @@ func GetProvider() *ujconfig.Provider {
 		stripepromotioncode.Configure,
 		stripeshippingrate.Configure,
 		stripetaxrate.Configure,
+		stripewebhookendpoint.Configure,
 	} {
 		configure(pc)
 	}
@@ -107,6 +110,7 @@ func GetProviderNamespaced() *ujconfig.Provider {
 		namespacedstripepromotioncode.Configure,
 		namespacedstripeshippingrate.Configure,
 		namespacedstripetaxrate.Configure,
+		namespacedstripewebhookendpoint.Configure,
 	} {
 		configure(pc)
 	}

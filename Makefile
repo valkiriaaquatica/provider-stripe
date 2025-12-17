@@ -49,6 +49,7 @@ GOLANGCILINT_VERSION ?= 2.6.1
 GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider $(GO_PROJECT)/cmd/generator
 GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
 GO_SUBDIRS += cmd internal apis
+export PATH := $(shell go env GOPATH)/bin:$(PATH)
 -include build/makelib/golang.mk
 
 # ====================================================================================
@@ -65,17 +66,17 @@ CROSSPLANE_VERSION = 2.1.1
 # ====================================================================================
 # Setup Images
 
-REGISTRY_ORGS ?= ghcr.io/crossplane-contrib
+REGISTRY_ORGS ?= xpkg.upbound.io/valkiriaaquaticamendi
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
 
 # ====================================================================================
 # Setup XPKG
 
-XPKG_REG_ORGS ?= ghcr.io/crossplane-contrib
+XPKG_REG_ORGS ?= xpkg.upbound.io/valkiriaaquaticamendi
 # NOTE(hasheddan): skip promoting on xpkg.crossplane.io as channel tags are
 # inferred.
-XPKG_REG_ORGS_NO_PROMOTE ?= ghcr.io/crossplane-contrib
+XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/valkiriaaquaticamendi
 XPKGS = $(PROJECT_NAME)
 -include build/makelib/xpkg.mk
 
@@ -137,6 +138,7 @@ pull-docs:
 	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
 generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
+	@command -v goimports >/dev/null 2>&1 || $(GOHOST) install golang.org/x/tools/cmd/goimports@latest
 
 .PHONY: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs check-terraform-version
 # ====================================================================================
