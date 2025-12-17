@@ -10,11 +10,27 @@ import (
 	stripecoupon "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecoupon"
 	stripecustomer "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecustomer"
 	stripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeentitlementsfeature"
+	stripefile "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripefile"
+	stripemeter "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripemeter"
+	stripeportalconfiguration "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeportalconfiguration"
+	stripeprice "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeprice"
+	stripeproduct "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeproduct"
+	stripeproductfeature "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeproductfeature"
+	stripepromotioncode "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripepromotioncode"
+	stripeshippingrate "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeshippingrate"
 
 	namespacedstripecard "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecard"
 	namespacedstripecoupon "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecoupon"
 	namespacedstripecustomer "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecustomer"
 	namespacedstripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeentitlementsfeature"
+	namespacedstripefile "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripefile"
+	namespacedstripemeter "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripemeter"
+	namespacedstripeportalconfiguration "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeportalconfiguration"
+	namespacedstripeprice "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeprice"
+	namespacedstripeproduct "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeproduct"
+	namespacedstripeproductfeature "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeproductfeature"
+	namespacedstripepromotioncode "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripepromotioncode"
+	namespacedstripeshippingrate "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeshippingrate"
 )
 
 const (
@@ -44,6 +60,14 @@ func GetProvider() *ujconfig.Provider {
 		stripecustomer.Configure,
 		stripecoupon.Configure,
 		stripeentitlementsfeature.Configure,
+		stripefile.Configure,
+		stripemeter.Configure,
+		stripeportalconfiguration.Configure,
+		stripeprice.Configure,
+		stripeproduct.Configure,
+		stripeproductfeature.Configure,
+		stripepromotioncode.Configure,
+		stripeshippingrate.Configure,
 	} {
 		configure(pc)
 	}
@@ -71,6 +95,14 @@ func GetProviderNamespaced() *ujconfig.Provider {
 		namespacedstripecustomer.Configure,
 		namespacedstripecoupon.Configure,
 		namespacedstripeentitlementsfeature.Configure,
+		namespacedstripefile.Configure,
+		namespacedstripemeter.Configure,
+		namespacedstripeportalconfiguration.Configure,
+		namespacedstripeprice.Configure,
+		namespacedstripeproduct.Configure,
+		namespacedstripeproductfeature.Configure,
+		namespacedstripepromotioncode.Configure,
+		namespacedstripeshippingrate.Configure,
 	} {
 		configure(pc)
 	}

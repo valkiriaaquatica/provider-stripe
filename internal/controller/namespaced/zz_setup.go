@@ -14,6 +14,14 @@ import (
 	coupon "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripecoupon/coupon"
 	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripecustomer/customer"
 	feature "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeentitlementsfeature/feature"
+	file "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripefile/file"
+	meter "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripemeter/meter"
+	configuration "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeportalconfiguration/configuration"
+	price "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeprice/price"
+	product "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeproduct/product"
+	featurestripeproductfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeproductfeature/feature"
+	code "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripepromotioncode/code"
+	rate "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripeshippingrate/rate"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
@@ -25,6 +33,14 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		coupon.Setup,
 		customer.Setup,
 		feature.Setup,
+		file.Setup,
+		meter.Setup,
+		configuration.Setup,
+		price.Setup,
+		product.Setup,
+		featurestripeproductfeature.Setup,
+		code.Setup,
+		rate.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
@@ -42,6 +58,14 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 		coupon.SetupGated,
 		customer.SetupGated,
 		feature.SetupGated,
+		file.SetupGated,
+		meter.SetupGated,
+		configuration.SetupGated,
+		price.SetupGated,
+		product.SetupGated,
+		featurestripeproductfeature.SetupGated,
+		code.SetupGated,
+		rate.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err

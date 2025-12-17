@@ -1,0 +1,394 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.18.0
+  name: meters.stripemeter.stripe.m.crossplane.io
+spec:
+  group: stripemeter.stripe.m.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - stripe
+    kind: Meter
+    listKind: MeterList
+    plural: meters
+    singular: meter
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Meter is the Schema for the Meters API. The Stripe Meter can
+          be created, modified and configured by this resource.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MeterSpec defines the desired state of Meter
+            properties:
+              forProvider:
+                properties:
+                  customerMapping:
+                    description: |-
+                      Lst(Resource). Fields that specify how to map a meter event to a customer.
+                      Fields that specify how to map a meter event to a customer.
+                    items:
+                      properties:
+                        eventPayloadKey:
+                          description: |-
+                            String. The key in the event payload to use for customer mapping.
+                            The key in the usage event payload to use for mapping the event to a customer.
+                          type: string
+                        type:
+                          description: |-
+                            String. The method for mapping a meter event to a customer. Must be by_id.
+                            The method for mapping a meter event to a customer. Must be by_id
+                          type: string
+                      type: object
+                    type: array
+                  defaultAggregation:
+                    description: |-
+                      List(Resource). The default settings to aggregate a meter’s events with.
+                      The default settings to aggregate a meter’s events with
+                    items:
+                      properties:
+                        formula:
+                          description: |-
+                            String. Specifies how events are aggregated. Allowed values are count to count the number of events and sum to sum each event’s value.
+                            Specifies how events are aggregated. Allowed values are count to count the number of events and sum to sum each event’s value.
+                          type: string
+                      type: object
+                    type: array
+                  displayName:
+                    description: |-
+                      String. The display name of the meter.
+                      The meter’s name.
+                    type: string
+                  eventName:
+                    description: |-
+                      String. The name of the meter event to record usage for. Corresponds with the event_name field on meter events.
+                      The name of the meter event to record usage for. Corresponds with the event_name field on meter events
+                    type: string
+                  eventTimeWindow:
+                    description: |-
+                      String. The time window to pre-aggregate meter events for, if any. Possible values are:
+                      The time window to pre-aggregate meter events for, if any.
+                    type: string
+                  valueSettings:
+                    description: |-
+                      List(Resource). Fields that specify how to calculate a meter event’s value.
+                      Fields that specify how to calculate a meter event’s value.
+                    items:
+                      properties:
+                        eventPayloadKey:
+                          description: |-
+                            String. The key in the event payload to use for customer mapping.
+                            The key in the usage event payload to use as the value for this meter. For example, if the event payload  contains usage on a bytes_used field, then set the event_payload_key to “bytes_used”
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  customerMapping:
+                    description: |-
+                      Lst(Resource). Fields that specify how to map a meter event to a customer.
+                      Fields that specify how to map a meter event to a customer.
+                    items:
+                      properties:
+                        eventPayloadKey:
+                          description: |-
+                            String. The key in the event payload to use for customer mapping.
+                            The key in the usage event payload to use for mapping the event to a customer.
+                          type: string
+                        type:
+                          description: |-
+                            String. The method for mapping a meter event to a customer. Must be by_id.
+                            The method for mapping a meter event to a customer. Must be by_id
+                          type: string
+                      type: object
+                    type: array
+                  defaultAggregation:
+                    description: |-
+                      List(Resource). The default settings to aggregate a meter’s events with.
+                      The default settings to aggregate a meter’s events with
+                    items:
+                      properties:
+                        formula:
+                          description: |-
+                            String. Specifies how events are aggregated. Allowed values are count to count the number of events and sum to sum each event’s value.
+                            Specifies how events are aggregated. Allowed values are count to count the number of events and sum to sum each event’s value.
+                          type: string
+                      type: object
+                    type: array
+                  displayName:
+                    description: |-
+                      String. The display name of the meter.
+                      The meter’s name.
+                    type: string
+                  eventName:
+                    description: |-
+                      String. The name of the meter event to record usage for. Corresponds with the event_name field on meter events.
+                      The name of the meter event to record usage for. Corresponds with the event_name field on meter events
+                    type: string
+                  eventTimeWindow:
+                    description: |-
+                      String. The time window to pre-aggregate meter events for, if any. Possible values are:
+                      The time window to pre-aggregate meter events for, if any.
+                    type: string
+                  valueSettings:
+                    description: |-
+                      List(Resource). Fields that specify how to calculate a meter event’s value.
+                      Fields that specify how to calculate a meter event’s value.
+                    items:
+                      properties:
+                        eventPayloadKey:
+                          description: |-
+                            String. The key in the event payload to use for customer mapping.
+                            The key in the usage event payload to use as the value for this meter. For example, if the event payload  contains usage on a bytes_used field, then set the event_payload_key to “bytes_used”
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  kind: ClusterProviderConfig
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  kind:
+                    description: Kind of the referenced object.
+                    type: string
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.defaultAggregation is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.defaultAggregation)
+                || (has(self.initProvider) && has(self.initProvider.defaultAggregation))'
+            - message: spec.forProvider.displayName is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.displayName)
+                || (has(self.initProvider) && has(self.initProvider.displayName))'
+            - message: spec.forProvider.eventName is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.eventName)
+                || (has(self.initProvider) && has(self.initProvider.eventName))'
+          status:
+            description: MeterStatus defines the observed state of Meter.
+            properties:
+              atProvider:
+                properties:
+                  customerMapping:
+                    description: |-
+                      Lst(Resource). Fields that specify how to map a meter event to a customer.
+                      Fields that specify how to map a meter event to a customer.
+                    items:
+                      properties:
+                        eventPayloadKey:
+                          description: |-
+                            String. The key in the event payload to use for customer mapping.
+                            The key in the usage event payload to use for mapping the event to a customer.
+                          type: string
+                        type:
+                          description: |-
+                            String. The method for mapping a meter event to a customer. Must be by_id.
+                            The method for mapping a meter event to a customer. Must be by_id
+                          type: string
+                      type: object
+                    type: array
+                  defaultAggregation:
+                    description: |-
+                      List(Resource). The default settings to aggregate a meter’s events with.
+                      The default settings to aggregate a meter’s events with
+                    items:
+                      properties:
+                        formula:
+                          description: |-
+                            String. Specifies how events are aggregated. Allowed values are count to count the number of events and sum to sum each event’s value.
+                            Specifies how events are aggregated. Allowed values are count to count the number of events and sum to sum each event’s value.
+                          type: string
+                      type: object
+                    type: array
+                  displayName:
+                    description: |-
+                      String. The display name of the meter.
+                      The meter’s name.
+                    type: string
+                  eventName:
+                    description: |-
+                      String. The name of the meter event to record usage for. Corresponds with the event_name field on meter events.
+                      The name of the meter event to record usage for. Corresponds with the event_name field on meter events
+                    type: string
+                  eventTimeWindow:
+                    description: |-
+                      String. The time window to pre-aggregate meter events for, if any. Possible values are:
+                      The time window to pre-aggregate meter events for, if any.
+                    type: string
+                  id:
+                    description: String. The unique identifier for the object.
+                    type: string
+                  valueSettings:
+                    description: |-
+                      List(Resource). Fields that specify how to calculate a meter event’s value.
+                      Fields that specify how to calculate a meter event’s value.
+                    items:
+                      properties:
+                        eventPayloadKey:
+                          description: |-
+                            String. The key in the event payload to use for customer mapping.
+                            The key in the usage event payload to use as the value for this meter. For example, if the event payload  contains usage on a bytes_used field, then set the event_payload_key to “bytes_used”
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

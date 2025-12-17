@@ -1,0 +1,1152 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.18.0
+  name: price.stripeprice.stripe.m.crossplane.io
+spec:
+  group: stripeprice.stripe.m.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - stripe
+    kind: Price
+    listKind: PriceList
+    plural: price
+    singular: price
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Price is the Schema for the Prices API. The Stripe Price can
+          be created, modified and configured by this resource.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: PriceSpec defines the desired state of Price
+            properties:
+              forProvider:
+                properties:
+                  active:
+                    description: |-
+                      Bool. Whether the price can be used for new purchases. Defaults to true.
+                      Whether the price can be used for new purchases. Defaults to true.
+                    type: boolean
+                  billingScheme:
+                    description: |-
+                      String. Describes how to compute the price per period. Either per_unit or tiered
+                      . per_unit indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per
+                      unit in quantity (for prices with usage_type=licensed), or per unit of total usage (for prices
+                      with usage_type=metered). tiered indicates that the unit pricing will be computed using a tiering strategy as
+                      defined using the tiers and tiers_mode attributes.
+                      Describes how to compute the price per period. Either per_unit or tiered. per_unit indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per unit in quantity (for prices with usage_type=licensed), or per unit of total usage (for prices with usage_type=metered). tiered indicates that the unit pricing will be computed using a tiering strategy as defined using the tiers and tiers_mode attributes.
+                    type: string
+                  currency:
+                    description: |-
+                      String. Three-letter ISO currency code, in lowercase - supported currencies.
+                      Three-letter ISO currency code, in lowercase.
+                    type: string
+                  currencyOptions:
+                    description: |-
+                      List(Resource). Prices defined in each available currency option. For details
+                      of individual arguments see Currency Options.
+                      Prices defined in each available currency option. Each key must be a three-letter ISO currency code and a supported currency
+                    items:
+                      properties:
+                        currency:
+                          description: |-
+                            String. Three-letter ISO currency code, in lowercase - supported currencies.
+                            Each currency must be a three-letter ISO currency code and a supported currency
+                          type: string
+                        customUnitAmount:
+                          description: |-
+                            List(Resource). When set,
+                            provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+                            See details in Custom Unit Amount.
+                            When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links
+                          items:
+                            properties:
+                              enabled:
+                                description: |-
+                                  Bool. Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount.
+                                  Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount
+                                type: boolean
+                              maximum:
+                                description: |-
+                                  Int. The maximum unit amount the customer can specify for this item.
+                                  The maximum unit amount the customer can specify for this item.
+                                type: number
+                              minimum:
+                                description: |-
+                                  Int. The minimum unit amount the customer can specify for this item.
+                                  Must be at least the minimum charge amount.
+                                  The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+                                type: number
+                              preset:
+                                description: |-
+                                  Int. The starting unit amount which can be updated by the customer.
+                                  The starting unit amount which can be updated by the customer.
+                                type: number
+                            type: object
+                          type: array
+                        taxBehavior:
+                          description: |-
+                            String. Only required if a default tax behavior was not provided in the Stripe Tax settings.
+                            Specifies whether the price is considered inclusive of taxes or exclusive of taxes.
+                            One of inclusive, exclusive, or unspecified.
+                            Once specified as either inclusive or exclusive, it cannot be changed.
+                            Only required if a default tax behavior was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it cannot be changed.
+                          type: string
+                        tiers:
+                          description: |-
+                            List(Resource). Each element represents a pricing tier.
+                            This parameter requires billing_scheme to be set to tiered. This resource can be used more than once and follows
+                            the same fields as the root tiers block
+                            Each element represents a pricing tier. This parameter requires billing_scheme to be set to tiered. See also the documentation for billing_scheme.
+                          items:
+                            properties:
+                              flatAmount:
+                                description: |-
+                                  Int. The flat billing amount for an entire tier, regardless of the number of units in the
+                                  tier.
+                                  The flat billing amount for an entire tier, regardless of the number of units in the tier.
+                                type: number
+                              flatAmountDecimal:
+                                description: |-
+                                  Float. Same as flat_amount, but accepts a decimal value representing an integer
+                                  in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                                  Same as flat_amount, but accepts a decimal value representing an integer in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                                type: number
+                              unitAmount:
+                                description: |-
+                                  Int. A positive integer in cents (or -1 for a free
+                                  price) representing how much to charge.
+                                  The per unit billing amount for each individual unit for which this tier applies.
+                                type: number
+                              unitAmountDecimal:
+                                description: |-
+                                  Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                                  decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                                  Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                                type: number
+                              upTo:
+                                description: |-
+                                  Int. Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the
+                                  previous tier adding one. Use -1 to define a fallback tier.
+                                  Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use -1 to define a fallback tier.
+                                type: number
+                            type: object
+                          type: array
+                        unitAmount:
+                          description: |-
+                            Int. A positive integer in cents (or -1 for a free price) representing how much to charge.
+                            A positive integer in cents (or -1 for a free price) representing how much to charge.
+                          type: number
+                        unitAmountDecimal:
+                          description: |-
+                            Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                            decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                            Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                          type: number
+                      type: object
+                    type: array
+                  customUnitAmount:
+                    description: |-
+                      List(Resource). When set, provides configuration for the amount to be adjusted by
+                      the customer during Checkout Sessions and Payment Links.
+                      For individual fields see Custom Unit Amount.
+                      When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            Bool. Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount.
+                            Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount
+                          type: boolean
+                        maximum:
+                          description: |-
+                            Int. The maximum unit amount the customer can specify for this item.
+                            The maximum unit amount the customer can specify for this item.
+                          type: number
+                        minimum:
+                          description: |-
+                            Int. The minimum unit amount the customer can specify for this item.
+                            Must be at least the minimum charge amount.
+                            The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+                          type: number
+                        preset:
+                          description: |-
+                            Int. The starting unit amount which can be updated by the customer.
+                            The starting unit amount which can be updated by the customer.
+                          type: number
+                      type: object
+                    type: array
+                  lookupKey:
+                    description: |-
+                      String. A lookup key used to retrieve prices dynamically from a static string.
+                      A lookup key used to retrieve prices dynamically from a static string.
+                    type: string
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                      storing additional information about the object in a structured format.
+                      Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  nickname:
+                    description: |-
+                      String. A brief description of the price, hidden from customers.
+                      A brief description of the price, hidden from customers.
+                    type: string
+                  product:
+                    description: |-
+                      String. The ID of the product that this price will belong to.
+                      The ID of the product that this price will belong to.
+                    type: string
+                  recurring:
+                    description: |-
+                      List(Resource). The recurring components of a price such as interval and usage_type. For
+                      details of individual arguments see Recurring.
+                      The recurring components of a price such as interval and usage_type.
+                    items:
+                      properties:
+                        aggregateUsage:
+                          description: |-
+                            String. Specifies a usage of aggregation strategy for prices of usage_type=metered.
+                            Allowed values are sum for summing up all usage during a period, last_during_period for using the last usage
+                            record reported within a period, last_ever for using the last usage record ever (across period bounds) or max
+                            which uses the usage record with the maximum reported usage during a period.
+                            Specifies a usage aggregation strategy for prices of usage_type=metered. Allowed values are sum for summing up all usage during a period, last_during_period for using the last usage record reported within a period, last_ever for using the last usage record ever (across period bounds) or max which uses the usage record with the maximum reported usage during a period.
+                          type: string
+                        interval:
+                          description: |-
+                            String. Specifies billing frequency. Either day, week, month or year.
+                            Specifies billing frequency. Either day, week, month or year.
+                          type: string
+                        intervalCount:
+                          description: |-
+                            Int. This parameter is  when interval value is set. The number of intervals between subscription billings. For
+                            example, interval=month and interval_count=3 bills every 3 months. Maximum of one year interval allowed (1 year,
+                            12 months, or 52 weeks).
+                            The number of intervals between subscription billings. For example, interval=month and interval_count=3 bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+                          type: number
+                        meter:
+                          description: |-
+                            String. The meter tracking the usage of a metered price.
+                            The meter tracking the usage of a metered price
+                          type: string
+                        usageType:
+                          description: |-
+                            String. Configures how the quantity per period should be determined. Can be either metered
+                            or licensed. licensed automatically bills the quantity set when adding it to a subscription. metered aggregates
+                            the total usage based on usage records. Defaults to licensed.
+                            Configures how the quantity per period should be determined. Can be either metered or licensed. licensed automatically bills the quantity set when adding it to a subscription. metered aggregates the total usage based on usage records. Defaults to licensed.
+                          type: string
+                      type: object
+                    type: array
+                  taxBehavior:
+                    description: |-
+                      String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                      taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it
+                      cannot be changed, default is unspecified.
+                      Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it cannot be changed.
+                    type: string
+                  tiers:
+                    description: |-
+                      List(Resource). Each element represents a pricing tier. This parameter requires billing_scheme
+                      to be set to tiered. See also the documentation for billing_scheme. For details of individual arguments
+                      see Tiers.
+                      Each element represents a pricing tier. This parameter requires billing_scheme to be set to tiered. See also the documentation for billing_scheme.
+                    items:
+                      properties:
+                        flatAmount:
+                          description: |-
+                            Int. The flat billing amount for an entire tier, regardless of the number of units in the
+                            tier.
+                            The flat billing amount for an entire tier, regardless of the number of units in the tier.
+                          type: number
+                        flatAmountDecimal:
+                          description: |-
+                            Float. Same as flat_amount, but accepts a decimal value representing an integer
+                            in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                            Same as flat_amount, but accepts a decimal value representing an integer in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                          type: number
+                        unitAmount:
+                          description: |-
+                            Int. A positive integer in cents (or -1 for a free
+                            price) representing how much to charge.
+                            The per unit billing amount for each individual unit for which this tier applies.
+                          type: number
+                        unitAmountDecimal:
+                          description: |-
+                            Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                            decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                            Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                          type: number
+                        upTo:
+                          description: |-
+                            Int. Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the
+                            previous tier adding one. Use -1 to define a fallback tier.
+                            Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use -1 to define a fallback tier.
+                          type: number
+                      type: object
+                    type: array
+                  tiersMode:
+                    description: |-
+                      String. Defines if the tiering price should be graduated
+                      or volume based. In volume-based tiering, the maximum quantity within a period determines the per-unit price,
+                      in graduated tiering pricing can successively change as the quantity grows.
+                      Defines if the tiering price should be graduated or volume based. In volume-based tiering, the maximum quantity within a period determines the per unit price, in graduated tiering pricing can successively change as the quantity grows.
+                    type: string
+                  transferLookupKey:
+                    description: |-
+                      Bool. If set to true, will atomically remove the lookup key from the existing
+                      price, and assign it to this price.
+                      If set to true, will atomically remove the lookup key from the existing price, and assign it to this price.
+                    type: boolean
+                  transformQuantity:
+                    description: |-
+                      List(Resource). Apply a transformation to the reported usage or set quantity before
+                      computing the billed price. Cannot be combined with tiers. For details of individual arguments
+                      see Transform Quantity.
+                      Apply a transformation to the reported usage or set quantity before computing the billed price. Cannot be combined with tiers
+                    items:
+                      properties:
+                        divideBy:
+                          description: |-
+                            Int. Divide usage by this number.
+                            Divide usage by this number.
+                          type: number
+                        round:
+                          description: |-
+                            String. After division, either round the result up or down.
+                            After division, either round the result up or down
+                          type: string
+                      type: object
+                    type: array
+                  unitAmount:
+                    description: |-
+                      Int. A positive integer in cents (or -1 for a free
+                      price) representing how much to charge.
+                      A positive integer in cents (or -1 for a free price) representing how much to charge.
+                    type: number
+                  unitAmountDecimal:
+                    description: |-
+                      Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                      decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                      Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set
+                    type: number
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  active:
+                    description: |-
+                      Bool. Whether the price can be used for new purchases. Defaults to true.
+                      Whether the price can be used for new purchases. Defaults to true.
+                    type: boolean
+                  billingScheme:
+                    description: |-
+                      String. Describes how to compute the price per period. Either per_unit or tiered
+                      . per_unit indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per
+                      unit in quantity (for prices with usage_type=licensed), or per unit of total usage (for prices
+                      with usage_type=metered). tiered indicates that the unit pricing will be computed using a tiering strategy as
+                      defined using the tiers and tiers_mode attributes.
+                      Describes how to compute the price per period. Either per_unit or tiered. per_unit indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per unit in quantity (for prices with usage_type=licensed), or per unit of total usage (for prices with usage_type=metered). tiered indicates that the unit pricing will be computed using a tiering strategy as defined using the tiers and tiers_mode attributes.
+                    type: string
+                  currency:
+                    description: |-
+                      String. Three-letter ISO currency code, in lowercase - supported currencies.
+                      Three-letter ISO currency code, in lowercase.
+                    type: string
+                  currencyOptions:
+                    description: |-
+                      List(Resource). Prices defined in each available currency option. For details
+                      of individual arguments see Currency Options.
+                      Prices defined in each available currency option. Each key must be a three-letter ISO currency code and a supported currency
+                    items:
+                      properties:
+                        currency:
+                          description: |-
+                            String. Three-letter ISO currency code, in lowercase - supported currencies.
+                            Each currency must be a three-letter ISO currency code and a supported currency
+                          type: string
+                        customUnitAmount:
+                          description: |-
+                            List(Resource). When set,
+                            provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+                            See details in Custom Unit Amount.
+                            When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links
+                          items:
+                            properties:
+                              enabled:
+                                description: |-
+                                  Bool. Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount.
+                                  Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount
+                                type: boolean
+                              maximum:
+                                description: |-
+                                  Int. The maximum unit amount the customer can specify for this item.
+                                  The maximum unit amount the customer can specify for this item.
+                                type: number
+                              minimum:
+                                description: |-
+                                  Int. The minimum unit amount the customer can specify for this item.
+                                  Must be at least the minimum charge amount.
+                                  The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+                                type: number
+                              preset:
+                                description: |-
+                                  Int. The starting unit amount which can be updated by the customer.
+                                  The starting unit amount which can be updated by the customer.
+                                type: number
+                            type: object
+                          type: array
+                        taxBehavior:
+                          description: |-
+                            String. Only required if a default tax behavior was not provided in the Stripe Tax settings.
+                            Specifies whether the price is considered inclusive of taxes or exclusive of taxes.
+                            One of inclusive, exclusive, or unspecified.
+                            Once specified as either inclusive or exclusive, it cannot be changed.
+                            Only required if a default tax behavior was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it cannot be changed.
+                          type: string
+                        tiers:
+                          description: |-
+                            List(Resource). Each element represents a pricing tier.
+                            This parameter requires billing_scheme to be set to tiered. This resource can be used more than once and follows
+                            the same fields as the root tiers block
+                            Each element represents a pricing tier. This parameter requires billing_scheme to be set to tiered. See also the documentation for billing_scheme.
+                          items:
+                            properties:
+                              flatAmount:
+                                description: |-
+                                  Int. The flat billing amount for an entire tier, regardless of the number of units in the
+                                  tier.
+                                  The flat billing amount for an entire tier, regardless of the number of units in the tier.
+                                type: number
+                              flatAmountDecimal:
+                                description: |-
+                                  Float. Same as flat_amount, but accepts a decimal value representing an integer
+                                  in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                                  Same as flat_amount, but accepts a decimal value representing an integer in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                                type: number
+                              unitAmount:
+                                description: |-
+                                  Int. A positive integer in cents (or -1 for a free
+                                  price) representing how much to charge.
+                                  The per unit billing amount for each individual unit for which this tier applies.
+                                type: number
+                              unitAmountDecimal:
+                                description: |-
+                                  Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                                  decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                                  Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                                type: number
+                              upTo:
+                                description: |-
+                                  Int. Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the
+                                  previous tier adding one. Use -1 to define a fallback tier.
+                                  Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use -1 to define a fallback tier.
+                                type: number
+                            type: object
+                          type: array
+                        unitAmount:
+                          description: |-
+                            Int. A positive integer in cents (or -1 for a free price) representing how much to charge.
+                            A positive integer in cents (or -1 for a free price) representing how much to charge.
+                          type: number
+                        unitAmountDecimal:
+                          description: |-
+                            Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                            decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                            Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                          type: number
+                      type: object
+                    type: array
+                  customUnitAmount:
+                    description: |-
+                      List(Resource). When set, provides configuration for the amount to be adjusted by
+                      the customer during Checkout Sessions and Payment Links.
+                      For individual fields see Custom Unit Amount.
+                      When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            Bool. Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount.
+                            Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount
+                          type: boolean
+                        maximum:
+                          description: |-
+                            Int. The maximum unit amount the customer can specify for this item.
+                            The maximum unit amount the customer can specify for this item.
+                          type: number
+                        minimum:
+                          description: |-
+                            Int. The minimum unit amount the customer can specify for this item.
+                            Must be at least the minimum charge amount.
+                            The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+                          type: number
+                        preset:
+                          description: |-
+                            Int. The starting unit amount which can be updated by the customer.
+                            The starting unit amount which can be updated by the customer.
+                          type: number
+                      type: object
+                    type: array
+                  lookupKey:
+                    description: |-
+                      String. A lookup key used to retrieve prices dynamically from a static string.
+                      A lookup key used to retrieve prices dynamically from a static string.
+                    type: string
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                      storing additional information about the object in a structured format.
+                      Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  nickname:
+                    description: |-
+                      String. A brief description of the price, hidden from customers.
+                      A brief description of the price, hidden from customers.
+                    type: string
+                  product:
+                    description: |-
+                      String. The ID of the product that this price will belong to.
+                      The ID of the product that this price will belong to.
+                    type: string
+                  recurring:
+                    description: |-
+                      List(Resource). The recurring components of a price such as interval and usage_type. For
+                      details of individual arguments see Recurring.
+                      The recurring components of a price such as interval and usage_type.
+                    items:
+                      properties:
+                        aggregateUsage:
+                          description: |-
+                            String. Specifies a usage of aggregation strategy for prices of usage_type=metered.
+                            Allowed values are sum for summing up all usage during a period, last_during_period for using the last usage
+                            record reported within a period, last_ever for using the last usage record ever (across period bounds) or max
+                            which uses the usage record with the maximum reported usage during a period.
+                            Specifies a usage aggregation strategy for prices of usage_type=metered. Allowed values are sum for summing up all usage during a period, last_during_period for using the last usage record reported within a period, last_ever for using the last usage record ever (across period bounds) or max which uses the usage record with the maximum reported usage during a period.
+                          type: string
+                        interval:
+                          description: |-
+                            String. Specifies billing frequency. Either day, week, month or year.
+                            Specifies billing frequency. Either day, week, month or year.
+                          type: string
+                        intervalCount:
+                          description: |-
+                            Int. This parameter is  when interval value is set. The number of intervals between subscription billings. For
+                            example, interval=month and interval_count=3 bills every 3 months. Maximum of one year interval allowed (1 year,
+                            12 months, or 52 weeks).
+                            The number of intervals between subscription billings. For example, interval=month and interval_count=3 bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+                          type: number
+                        meter:
+                          description: |-
+                            String. The meter tracking the usage of a metered price.
+                            The meter tracking the usage of a metered price
+                          type: string
+                        usageType:
+                          description: |-
+                            String. Configures how the quantity per period should be determined. Can be either metered
+                            or licensed. licensed automatically bills the quantity set when adding it to a subscription. metered aggregates
+                            the total usage based on usage records. Defaults to licensed.
+                            Configures how the quantity per period should be determined. Can be either metered or licensed. licensed automatically bills the quantity set when adding it to a subscription. metered aggregates the total usage based on usage records. Defaults to licensed.
+                          type: string
+                      type: object
+                    type: array
+                  taxBehavior:
+                    description: |-
+                      String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                      taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it
+                      cannot be changed, default is unspecified.
+                      Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it cannot be changed.
+                    type: string
+                  tiers:
+                    description: |-
+                      List(Resource). Each element represents a pricing tier. This parameter requires billing_scheme
+                      to be set to tiered. See also the documentation for billing_scheme. For details of individual arguments
+                      see Tiers.
+                      Each element represents a pricing tier. This parameter requires billing_scheme to be set to tiered. See also the documentation for billing_scheme.
+                    items:
+                      properties:
+                        flatAmount:
+                          description: |-
+                            Int. The flat billing amount for an entire tier, regardless of the number of units in the
+                            tier.
+                            The flat billing amount for an entire tier, regardless of the number of units in the tier.
+                          type: number
+                        flatAmountDecimal:
+                          description: |-
+                            Float. Same as flat_amount, but accepts a decimal value representing an integer
+                            in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                            Same as flat_amount, but accepts a decimal value representing an integer in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                          type: number
+                        unitAmount:
+                          description: |-
+                            Int. A positive integer in cents (or -1 for a free
+                            price) representing how much to charge.
+                            The per unit billing amount for each individual unit for which this tier applies.
+                          type: number
+                        unitAmountDecimal:
+                          description: |-
+                            Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                            decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                            Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                          type: number
+                        upTo:
+                          description: |-
+                            Int. Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the
+                            previous tier adding one. Use -1 to define a fallback tier.
+                            Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use -1 to define a fallback tier.
+                          type: number
+                      type: object
+                    type: array
+                  tiersMode:
+                    description: |-
+                      String. Defines if the tiering price should be graduated
+                      or volume based. In volume-based tiering, the maximum quantity within a period determines the per-unit price,
+                      in graduated tiering pricing can successively change as the quantity grows.
+                      Defines if the tiering price should be graduated or volume based. In volume-based tiering, the maximum quantity within a period determines the per unit price, in graduated tiering pricing can successively change as the quantity grows.
+                    type: string
+                  transferLookupKey:
+                    description: |-
+                      Bool. If set to true, will atomically remove the lookup key from the existing
+                      price, and assign it to this price.
+                      If set to true, will atomically remove the lookup key from the existing price, and assign it to this price.
+                    type: boolean
+                  transformQuantity:
+                    description: |-
+                      List(Resource). Apply a transformation to the reported usage or set quantity before
+                      computing the billed price. Cannot be combined with tiers. For details of individual arguments
+                      see Transform Quantity.
+                      Apply a transformation to the reported usage or set quantity before computing the billed price. Cannot be combined with tiers
+                    items:
+                      properties:
+                        divideBy:
+                          description: |-
+                            Int. Divide usage by this number.
+                            Divide usage by this number.
+                          type: number
+                        round:
+                          description: |-
+                            String. After division, either round the result up or down.
+                            After division, either round the result up or down
+                          type: string
+                      type: object
+                    type: array
+                  unitAmount:
+                    description: |-
+                      Int. A positive integer in cents (or -1 for a free
+                      price) representing how much to charge.
+                      A positive integer in cents (or -1 for a free price) representing how much to charge.
+                    type: number
+                  unitAmountDecimal:
+                    description: |-
+                      Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                      decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                      Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set
+                    type: number
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  kind: ClusterProviderConfig
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  kind:
+                    description: Kind of the referenced object.
+                    type: string
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.currency is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.currency)
+                || (has(self.initProvider) && has(self.initProvider.currency))'
+            - message: spec.forProvider.product is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.product)
+                || (has(self.initProvider) && has(self.initProvider.product))'
+          status:
+            description: PriceStatus defines the observed state of Price.
+            properties:
+              atProvider:
+                properties:
+                  active:
+                    description: |-
+                      Bool. Whether the price can be used for new purchases. Defaults to true.
+                      Whether the price can be used for new purchases. Defaults to true.
+                    type: boolean
+                  billingScheme:
+                    description: |-
+                      String. Describes how to compute the price per period. Either per_unit or tiered
+                      . per_unit indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per
+                      unit in quantity (for prices with usage_type=licensed), or per unit of total usage (for prices
+                      with usage_type=metered). tiered indicates that the unit pricing will be computed using a tiering strategy as
+                      defined using the tiers and tiers_mode attributes.
+                      Describes how to compute the price per period. Either per_unit or tiered. per_unit indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per unit in quantity (for prices with usage_type=licensed), or per unit of total usage (for prices with usage_type=metered). tiered indicates that the unit pricing will be computed using a tiering strategy as defined using the tiers and tiers_mode attributes.
+                    type: string
+                  currency:
+                    description: |-
+                      String. Three-letter ISO currency code, in lowercase - supported currencies.
+                      Three-letter ISO currency code, in lowercase.
+                    type: string
+                  currencyOptions:
+                    description: |-
+                      List(Resource). Prices defined in each available currency option. For details
+                      of individual arguments see Currency Options.
+                      Prices defined in each available currency option. Each key must be a three-letter ISO currency code and a supported currency
+                    items:
+                      properties:
+                        currency:
+                          description: |-
+                            String. Three-letter ISO currency code, in lowercase - supported currencies.
+                            Each currency must be a three-letter ISO currency code and a supported currency
+                          type: string
+                        customUnitAmount:
+                          description: |-
+                            List(Resource). When set,
+                            provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+                            See details in Custom Unit Amount.
+                            When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links
+                          items:
+                            properties:
+                              enabled:
+                                description: |-
+                                  Bool. Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount.
+                                  Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount
+                                type: boolean
+                              maximum:
+                                description: |-
+                                  Int. The maximum unit amount the customer can specify for this item.
+                                  The maximum unit amount the customer can specify for this item.
+                                type: number
+                              minimum:
+                                description: |-
+                                  Int. The minimum unit amount the customer can specify for this item.
+                                  Must be at least the minimum charge amount.
+                                  The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+                                type: number
+                              preset:
+                                description: |-
+                                  Int. The starting unit amount which can be updated by the customer.
+                                  The starting unit amount which can be updated by the customer.
+                                type: number
+                            type: object
+                          type: array
+                        taxBehavior:
+                          description: |-
+                            String. Only required if a default tax behavior was not provided in the Stripe Tax settings.
+                            Specifies whether the price is considered inclusive of taxes or exclusive of taxes.
+                            One of inclusive, exclusive, or unspecified.
+                            Once specified as either inclusive or exclusive, it cannot be changed.
+                            Only required if a default tax behavior was not provided in the Stripe Tax settings. Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it cannot be changed.
+                          type: string
+                        tiers:
+                          description: |-
+                            List(Resource). Each element represents a pricing tier.
+                            This parameter requires billing_scheme to be set to tiered. This resource can be used more than once and follows
+                            the same fields as the root tiers block
+                            Each element represents a pricing tier. This parameter requires billing_scheme to be set to tiered. See also the documentation for billing_scheme.
+                          items:
+                            properties:
+                              flatAmount:
+                                description: |-
+                                  Int. The flat billing amount for an entire tier, regardless of the number of units in the
+                                  tier.
+                                  The flat billing amount for an entire tier, regardless of the number of units in the tier.
+                                type: number
+                              flatAmountDecimal:
+                                description: |-
+                                  Float. Same as flat_amount, but accepts a decimal value representing an integer
+                                  in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                                  Same as flat_amount, but accepts a decimal value representing an integer in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                                type: number
+                              unitAmount:
+                                description: |-
+                                  Int. A positive integer in cents (or -1 for a free
+                                  price) representing how much to charge.
+                                  The per unit billing amount for each individual unit for which this tier applies.
+                                type: number
+                              unitAmountDecimal:
+                                description: |-
+                                  Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                                  decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                                  Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                                type: number
+                              upTo:
+                                description: |-
+                                  Int. Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the
+                                  previous tier adding one. Use -1 to define a fallback tier.
+                                  Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use -1 to define a fallback tier.
+                                type: number
+                            type: object
+                          type: array
+                        unitAmount:
+                          description: |-
+                            Int. A positive integer in cents (or -1 for a free price) representing how much to charge.
+                            A positive integer in cents (or -1 for a free price) representing how much to charge.
+                          type: number
+                        unitAmountDecimal:
+                          description: |-
+                            Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                            decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                            Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                          type: number
+                      type: object
+                    type: array
+                  customUnitAmount:
+                    description: |-
+                      List(Resource). When set, provides configuration for the amount to be adjusted by
+                      the customer during Checkout Sessions and Payment Links.
+                      For individual fields see Custom Unit Amount.
+                      When set, provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links
+                    items:
+                      properties:
+                        enabled:
+                          description: |-
+                            Bool. Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount.
+                            Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount
+                          type: boolean
+                        maximum:
+                          description: |-
+                            Int. The maximum unit amount the customer can specify for this item.
+                            The maximum unit amount the customer can specify for this item.
+                          type: number
+                        minimum:
+                          description: |-
+                            Int. The minimum unit amount the customer can specify for this item.
+                            Must be at least the minimum charge amount.
+                            The minimum unit amount the customer can specify for this item. Must be at least the minimum charge amount.
+                          type: number
+                        preset:
+                          description: |-
+                            Int. The starting unit amount which can be updated by the customer.
+                            The starting unit amount which can be updated by the customer.
+                          type: number
+                      type: object
+                    type: array
+                  id:
+                    description: String. The unique identifier for the object.
+                    type: string
+                  lookupKey:
+                    description: |-
+                      String. A lookup key used to retrieve prices dynamically from a static string.
+                      A lookup key used to retrieve prices dynamically from a static string.
+                    type: string
+                  metadata:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                      storing additional information about the object in a structured format.
+                      Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+                    type: object
+                    x-kubernetes-map-type: granular
+                  nickname:
+                    description: |-
+                      String. A brief description of the price, hidden from customers.
+                      A brief description of the price, hidden from customers.
+                    type: string
+                  product:
+                    description: |-
+                      String. The ID of the product that this price will belong to.
+                      The ID of the product that this price will belong to.
+                    type: string
+                  recurring:
+                    description: |-
+                      List(Resource). The recurring components of a price such as interval and usage_type. For
+                      details of individual arguments see Recurring.
+                      The recurring components of a price such as interval and usage_type.
+                    items:
+                      properties:
+                        aggregateUsage:
+                          description: |-
+                            String. Specifies a usage of aggregation strategy for prices of usage_type=metered.
+                            Allowed values are sum for summing up all usage during a period, last_during_period for using the last usage
+                            record reported within a period, last_ever for using the last usage record ever (across period bounds) or max
+                            which uses the usage record with the maximum reported usage during a period.
+                            Specifies a usage aggregation strategy for prices of usage_type=metered. Allowed values are sum for summing up all usage during a period, last_during_period for using the last usage record reported within a period, last_ever for using the last usage record ever (across period bounds) or max which uses the usage record with the maximum reported usage during a period.
+                          type: string
+                        interval:
+                          description: |-
+                            String. Specifies billing frequency. Either day, week, month or year.
+                            Specifies billing frequency. Either day, week, month or year.
+                          type: string
+                        intervalCount:
+                          description: |-
+                            Int. This parameter is  when interval value is set. The number of intervals between subscription billings. For
+                            example, interval=month and interval_count=3 bills every 3 months. Maximum of one year interval allowed (1 year,
+                            12 months, or 52 weeks).
+                            The number of intervals between subscription billings. For example, interval=month and interval_count=3 bills every 3 months. Maximum of one year interval allowed (1 year, 12 months, or 52 weeks).
+                          type: number
+                        meter:
+                          description: |-
+                            String. The meter tracking the usage of a metered price.
+                            The meter tracking the usage of a metered price
+                          type: string
+                        usageType:
+                          description: |-
+                            String. Configures how the quantity per period should be determined. Can be either metered
+                            or licensed. licensed automatically bills the quantity set when adding it to a subscription. metered aggregates
+                            the total usage based on usage records. Defaults to licensed.
+                            Configures how the quantity per period should be determined. Can be either metered or licensed. licensed automatically bills the quantity set when adding it to a subscription. metered aggregates the total usage based on usage records. Defaults to licensed.
+                          type: string
+                      type: object
+                    type: array
+                  taxBehavior:
+                    description: |-
+                      String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                      taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it
+                      cannot be changed, default is unspecified.
+                      Specifies whether the price is considered inclusive of taxes or exclusive of taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it cannot be changed.
+                    type: string
+                  tiers:
+                    description: |-
+                      List(Resource). Each element represents a pricing tier. This parameter requires billing_scheme
+                      to be set to tiered. See also the documentation for billing_scheme. For details of individual arguments
+                      see Tiers.
+                      Each element represents a pricing tier. This parameter requires billing_scheme to be set to tiered. See also the documentation for billing_scheme.
+                    items:
+                      properties:
+                        flatAmount:
+                          description: |-
+                            Int. The flat billing amount for an entire tier, regardless of the number of units in the
+                            tier.
+                            The flat billing amount for an entire tier, regardless of the number of units in the tier.
+                          type: number
+                        flatAmountDecimal:
+                          description: |-
+                            Float. Same as flat_amount, but accepts a decimal value representing an integer
+                            in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                            Same as flat_amount, but accepts a decimal value representing an integer in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+                          type: number
+                        unitAmount:
+                          description: |-
+                            Int. A positive integer in cents (or -1 for a free
+                            price) representing how much to charge.
+                            The per unit billing amount for each individual unit for which this tier applies.
+                          type: number
+                        unitAmountDecimal:
+                          description: |-
+                            Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                            decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                            Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                          type: number
+                        upTo:
+                          description: |-
+                            Int. Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the
+                            previous tier adding one. Use -1 to define a fallback tier.
+                            Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the previous tier adding one. Use -1 to define a fallback tier.
+                          type: number
+                      type: object
+                    type: array
+                  tiersMode:
+                    description: |-
+                      String. Defines if the tiering price should be graduated
+                      or volume based. In volume-based tiering, the maximum quantity within a period determines the per-unit price,
+                      in graduated tiering pricing can successively change as the quantity grows.
+                      Defines if the tiering price should be graduated or volume based. In volume-based tiering, the maximum quantity within a period determines the per unit price, in graduated tiering pricing can successively change as the quantity grows.
+                    type: string
+                  transferLookupKey:
+                    description: |-
+                      Bool. If set to true, will atomically remove the lookup key from the existing
+                      price, and assign it to this price.
+                      If set to true, will atomically remove the lookup key from the existing price, and assign it to this price.
+                    type: boolean
+                  transformQuantity:
+                    description: |-
+                      List(Resource). Apply a transformation to the reported usage or set quantity before
+                      computing the billed price. Cannot be combined with tiers. For details of individual arguments
+                      see Transform Quantity.
+                      Apply a transformation to the reported usage or set quantity before computing the billed price. Cannot be combined with tiers
+                    items:
+                      properties:
+                        divideBy:
+                          description: |-
+                            Int. Divide usage by this number.
+                            Divide usage by this number.
+                          type: number
+                        round:
+                          description: |-
+                            String. After division, either round the result up or down.
+                            After division, either round the result up or down
+                          type: string
+                      type: object
+                    type: array
+                  type:
+                    description: |-
+                      String. One of one_time or recurring depending on whether the price is for a one-time purchase or a
+                      recurring (subscription) purchase.
+                      One of one_time or recurring depending on whether the price is for a one-time purchase or a recurring (subscription) purchase
+                    type: string
+                  unitAmount:
+                    description: |-
+                      Int. A positive integer in cents (or -1 for a free
+                      price) representing how much to charge.
+                      A positive integer in cents (or -1 for a free price) representing how much to charge.
+                    type: number
+                  unitAmountDecimal:
+                    description: |-
+                      Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                      decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+                      Same as unit_amount, but accepts a decimal value in cents with at most 12 decimal places. Only one of unit_amount and unit_amount_decimal can be set
+                    type: number
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,13 @@
+apiVersion: stripeprice.stripe.crossplane.io/v1alpha1
+kind: Price
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripeprice/v1alpha1/price
+  labels:
+    testing.upbound.io/example-name: price
+  name: price
+spec:
+  forProvider:
+    currency: aud
+    product: ${stripe_product.product.id}
+    unitAmount: 100

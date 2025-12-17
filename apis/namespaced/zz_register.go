@@ -14,6 +14,14 @@ import (
 	v1alpha1stripecoupon "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripecoupon/v1alpha1"
 	v1alpha1stripecustomer "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripecustomer/v1alpha1"
 	v1alpha1stripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeentitlementsfeature/v1alpha1"
+	v1alpha1stripefile "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripefile/v1alpha1"
+	v1alpha1stripemeter "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripemeter/v1alpha1"
+	v1alpha1stripeportalconfiguration "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeportalconfiguration/v1alpha1"
+	v1alpha1stripeprice "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeprice/v1alpha1"
+	v1alpha1stripeproduct "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeproduct/v1alpha1"
+	v1alpha1stripeproductfeature "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeproductfeature/v1alpha1"
+	v1alpha1stripepromotioncode "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripepromotioncode/v1alpha1"
+	v1alpha1stripeshippingrate "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/stripeshippingrate/v1alpha1"
 	v1alpha1namespaced "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/v1alpha1"
 	v1beta1 "github.com/valkiriaaquatica/provider-stripe/apis/namespaced/v1beta1"
 )
@@ -25,6 +33,14 @@ func init() {
 		v1alpha1stripecoupon.SchemeBuilder.AddToScheme,
 		v1alpha1stripecustomer.SchemeBuilder.AddToScheme,
 		v1alpha1stripeentitlementsfeature.SchemeBuilder.AddToScheme,
+		v1alpha1stripefile.SchemeBuilder.AddToScheme,
+		v1alpha1stripemeter.SchemeBuilder.AddToScheme,
+		v1alpha1stripeportalconfiguration.SchemeBuilder.AddToScheme,
+		v1alpha1stripeprice.SchemeBuilder.AddToScheme,
+		v1alpha1stripeproduct.SchemeBuilder.AddToScheme,
+		v1alpha1stripeproductfeature.SchemeBuilder.AddToScheme,
+		v1alpha1stripepromotioncode.SchemeBuilder.AddToScheme,
+		v1alpha1stripeshippingrate.SchemeBuilder.AddToScheme,
 		v1alpha1namespaced.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
 	)

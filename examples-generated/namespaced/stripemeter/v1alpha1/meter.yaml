@@ -1,0 +1,20 @@
+apiVersion: stripemeter.stripe.m.crossplane.io/v1alpha1
+kind: Meter
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripemeter/v1alpha1/meter
+  labels:
+    testing.upbound.io/example-name: sample_meter
+  name: sample-meter
+  namespace: crossplane-system
+spec:
+  forProvider:
+    customerMapping:
+    - eventPayloadKey: stripe_customer_id
+      type: by_id
+    defaultAggregation:
+    - formula: sum
+    displayName: A Sample meter
+    eventName: sample_meter
+    valueSettings:
+    - eventPayloadKey: value

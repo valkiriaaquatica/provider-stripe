@@ -1,0 +1,11 @@
+apiVersion: stripeproduct.stripe.crossplane.io/v1alpha1
+kind: Product
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripeproduct/v1alpha1/product
+  labels:
+    testing.upbound.io/example-name: product
+  name: product
+spec:
+  forProvider:
+    name: minimalist product
