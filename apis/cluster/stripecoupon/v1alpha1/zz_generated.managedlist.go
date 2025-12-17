@@ -16,12 +16,3 @@ func (l *CouponList) GetItems() []resource.Managed {
 	}
 	return items
 }
-
-// GetItems of this CustomerList.
-func (l *CustomerList) GetItems() []resource.Managed {
-	items := make([]resource.Managed, len(l.Items))
-	for i := range l.Items {
-		items[i] = &l.Items[i]
-	}
-	return items
-}

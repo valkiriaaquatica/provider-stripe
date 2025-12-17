@@ -11,6 +11,7 @@ import (
 
 	providerconfig "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/providerconfig"
 	card "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecard/card"
+	coupon "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecoupon/coupon"
 	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecustomer/customer"
 )
 
@@ -20,6 +21,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		providerconfig.Setup,
 		card.Setup,
+		coupon.Setup,
 		customer.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
@@ -35,6 +37,7 @@ func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		providerconfig.SetupGated,
 		card.SetupGated,
+		coupon.SetupGated,
 		customer.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {

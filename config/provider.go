@@ -7,6 +7,7 @@ import (
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
 	stripecard "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecard"
+	stripecoupon "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecoupon"
 	stripecustomer "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecustomer"
 )
 
@@ -35,6 +36,7 @@ func GetProvider() *ujconfig.Provider {
 		// add custom config functions
 		stripecard.Configure,
 		stripecustomer.Configure,
+		stripecoupon.Configure,
 	} {
 		configure(pc)
 	}

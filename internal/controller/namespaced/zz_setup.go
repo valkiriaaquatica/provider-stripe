@@ -10,6 +10,7 @@ import (
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
 	providerconfig "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/providerconfig"
+	coupon "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripe/coupon"
 	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripe/customer"
 	card "github.com/valkiriaaquatica/provider-stripe/internal/controller/namespaced/stripecard/card"
 )
@@ -19,6 +20,7 @@ import (
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		providerconfig.Setup,
+		coupon.Setup,
 		customer.Setup,
 		card.Setup,
 	} {
@@ -34,6 +36,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		providerconfig.SetupGated,
+		coupon.SetupGated,
 		customer.SetupGated,
 		card.SetupGated,
 	} {
