@@ -1,7 +1,13 @@
 apiVersion: meta.pkg.crossplane.io/v1
 kind: Provider
 metadata:
-  name: upjet-provider-template
-spec:
-  capabilities:
-    - SafeStart
+  name: provider-stripe
+  annotations:
+    meta.crossplane.io/maintainer: Crossplane Maintainers fernandomendietaovejero@gmail.com
+    meta.crossplane.io/source: github.com/valkiriaaquatica/provider-stripe
+    meta.crossplane.io/license: Apache-2.0
+    meta.crossplane.io/description: |
+      Crossplane provider to manage Stripe resources in Kubernetes
+    meta.crossplane.io/readme: |
+      `provider-stripe` is the Crossplane infrastructure provider for Stripe
+    friendly-name.meta.crossplane.io: Provider Stripe

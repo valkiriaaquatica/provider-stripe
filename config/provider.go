@@ -6,13 +6,40 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/v2/pkg/config"
 
-	nullCluster "github.com/crossplane/upjet-provider-template/config/cluster/null"
-	nullNamespaced "github.com/crossplane/upjet-provider-template/config/namespaced/null"
+	stripecard "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecard"
+	stripecoupon "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecoupon"
+	stripecustomer "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripecustomer"
+	stripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeentitlementsfeature"
+	stripefile "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripefile"
+	stripemeter "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripemeter"
+	stripeportalconfiguration "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeportalconfiguration"
+	stripeprice "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeprice"
+	stripeproduct "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeproduct"
+	stripeproductfeature "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeproductfeature"
+	stripepromotioncode "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripepromotioncode"
+	stripeshippingrate "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripeshippingrate"
+	stripetaxrate "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripetaxrate"
+	stripewebhookendpoint "github.com/valkiriaaquatica/provider-stripe/config/cluster/stripewebhookendpoint"
+
+	namespacedstripecard "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecard"
+	namespacedstripecoupon "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecoupon"
+	namespacedstripecustomer "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripecustomer"
+	namespacedstripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeentitlementsfeature"
+	namespacedstripefile "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripefile"
+	namespacedstripemeter "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripemeter"
+	namespacedstripeportalconfiguration "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeportalconfiguration"
+	namespacedstripeprice "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeprice"
+	namespacedstripeproduct "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeproduct"
+	namespacedstripeproductfeature "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeproductfeature"
+	namespacedstripepromotioncode "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripepromotioncode"
+	namespacedstripeshippingrate "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripeshippingrate"
+	namespacedstripetaxrate "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripetaxrate"
+	namespacedstripewebhookendpoint "github.com/valkiriaaquatica/provider-stripe/config/namespaced/stripewebhookendpoint"
 )
 
 const (
-	resourcePrefix = "template"
-	modulePath     = "github.com/crossplane/upjet-provider-template"
+	resourcePrefix = "stripe"
+	modulePath     = "github.com/valkiriaaquatica/provider-stripe"
 )
 
 //go:embed schema.json
@@ -24,7 +51,7 @@ var providerMetadata string
 // GetProvider returns provider configuration
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
-		ujconfig.WithRootGroup("template.crossplane.io"),
+		ujconfig.WithRootGroup("stripe.crossplane.io"),
 		ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(
@@ -33,7 +60,20 @@ func GetProvider() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		nullCluster.Configure,
+		stripecard.Configure,
+		stripecustomer.Configure,
+		stripecoupon.Configure,
+		stripeentitlementsfeature.Configure,
+		stripefile.Configure,
+		stripemeter.Configure,
+		stripeportalconfiguration.Configure,
+		stripeprice.Configure,
+		stripeproduct.Configure,
+		stripeproductfeature.Configure,
+		stripepromotioncode.Configure,
+		stripeshippingrate.Configure,
+		stripetaxrate.Configure,
+		stripewebhookendpoint.Configure,
 	} {
 		configure(pc)
 	}
@@ -45,7 +85,7 @@ func GetProvider() *ujconfig.Provider {
 // GetProviderNamespaced returns the namespaced provider configuration
 func GetProviderNamespaced() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
-		ujconfig.WithRootGroup("template.m.crossplane.io"),
+		ujconfig.WithRootGroup("stripe.m.crossplane.io"),
 		ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(
@@ -57,7 +97,20 @@ func GetProviderNamespaced() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		nullNamespaced.Configure,
+		namespacedstripecard.Configure,
+		namespacedstripecustomer.Configure,
+		namespacedstripecoupon.Configure,
+		namespacedstripeentitlementsfeature.Configure,
+		namespacedstripefile.Configure,
+		namespacedstripemeter.Configure,
+		namespacedstripeportalconfiguration.Configure,
+		namespacedstripeprice.Configure,
+		namespacedstripeproduct.Configure,
+		namespacedstripeproductfeature.Configure,
+		namespacedstripepromotioncode.Configure,
+		namespacedstripeshippingrate.Configure,
+		namespacedstripetaxrate.Configure,
+		namespacedstripewebhookendpoint.Configure,
 	} {
 		configure(pc)
 	}

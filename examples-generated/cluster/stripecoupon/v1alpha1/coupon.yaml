@@ -1,0 +1,15 @@
+apiVersion: stripecoupon.stripe.crossplane.io/v1alpha1
+kind: Coupon
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripecoupon/v1alpha1/coupon
+  labels:
+    testing.upbound.io/example-name: coupon
+  name: coupon
+spec:
+  forProvider:
+    amountOff: 1000
+    currency: aud
+    duration: once
+    maxRedemptions: 10
+    name: $10 amount off

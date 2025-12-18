@@ -1,0 +1,17 @@
+apiVersion: stripeportalconfiguration.stripe.m.crossplane.io/v1alpha1
+kind: Configuration
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripeportalconfiguration/v1alpha1/configuration
+  labels:
+    testing.upbound.io/example-name: portal_configuration
+  name: portal-configuration
+  namespace: crossplane-system
+spec:
+  forProvider:
+    businessProfile:
+    - privacyPolicyUrl: https://example.com/privacy
+      termsOfServiceUrl: https://example.com/terms
+    features:
+    - paymentMethodUpdate:
+      - enabled: false

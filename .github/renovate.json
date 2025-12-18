@@ -1,0 +1,50 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)"
+  ],
+  "commitMessageAction": "update",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "Makefile"
+      ],
+      "matchStrings": [
+        "export TERRAFORM_PROVIDER_VERSION \\?= (?<currentValue>\\d+\\.\\d+\\.\\d+)",
+        "export TERRAFORM_NATIVE_PROVIDER_BINARY \\?= terraform-provider-stripe_v(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "lukasaron/terraform-provider-stripe",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "lukasaron/terraform-provider-stripe"
+      ],
+      "branchTopic": "{{depName}}-{{newVersion}}",
+      "recreateWhen": "auto",
+      "schedule": [],
+      "semanticCommitScope": "deps",
+      "labels": [
+        "provider",
+        "lukasaron",
+        "stripe"
+      ]
+    },
+    {
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "automerge": false,
+      "semanticCommitScope": "deps"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "commitMessagePrefix": "{{semanticCommitType}}({{semanticCommitScope}}):"
+    }
+  ]
+}

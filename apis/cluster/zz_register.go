@@ -10,15 +10,41 @@ package cluster
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	v1alpha1 "github.com/crossplane/upjet-provider-template/apis/cluster/null/v1alpha1"
-	v1alpha1cluster "github.com/crossplane/upjet-provider-template/apis/cluster/v1alpha1"
-	v1beta1 "github.com/crossplane/upjet-provider-template/apis/cluster/v1beta1"
+	v1alpha1 "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripecard/v1alpha1"
+	v1alpha1stripecoupon "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripecoupon/v1alpha1"
+	v1alpha1stripecustomer "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripecustomer/v1alpha1"
+	v1alpha1stripeentitlementsfeature "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripeentitlementsfeature/v1alpha1"
+	v1alpha1stripefile "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripefile/v1alpha1"
+	v1alpha1stripemeter "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripemeter/v1alpha1"
+	v1alpha1stripeportalconfiguration "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripeportalconfiguration/v1alpha1"
+	v1alpha1stripeprice "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripeprice/v1alpha1"
+	v1alpha1stripeproduct "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripeproduct/v1alpha1"
+	v1alpha1stripeproductfeature "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripeproductfeature/v1alpha1"
+	v1alpha1stripepromotioncode "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripepromotioncode/v1alpha1"
+	v1alpha1stripeshippingrate "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripeshippingrate/v1alpha1"
+	v1alpha1stripetaxrate "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripetaxrate/v1alpha1"
+	v1alpha1stripewebhookendpoint "github.com/valkiriaaquatica/provider-stripe/apis/cluster/stripewebhookendpoint/v1alpha1"
+	v1alpha1cluster "github.com/valkiriaaquatica/provider-stripe/apis/cluster/v1alpha1"
+	v1beta1 "github.com/valkiriaaquatica/provider-stripe/apis/cluster/v1beta1"
 )
 
 func init() {
 	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
+		v1alpha1stripecoupon.SchemeBuilder.AddToScheme,
+		v1alpha1stripecustomer.SchemeBuilder.AddToScheme,
+		v1alpha1stripeentitlementsfeature.SchemeBuilder.AddToScheme,
+		v1alpha1stripefile.SchemeBuilder.AddToScheme,
+		v1alpha1stripemeter.SchemeBuilder.AddToScheme,
+		v1alpha1stripeportalconfiguration.SchemeBuilder.AddToScheme,
+		v1alpha1stripeprice.SchemeBuilder.AddToScheme,
+		v1alpha1stripeproduct.SchemeBuilder.AddToScheme,
+		v1alpha1stripeproductfeature.SchemeBuilder.AddToScheme,
+		v1alpha1stripepromotioncode.SchemeBuilder.AddToScheme,
+		v1alpha1stripeshippingrate.SchemeBuilder.AddToScheme,
+		v1alpha1stripetaxrate.SchemeBuilder.AddToScheme,
+		v1alpha1stripewebhookendpoint.SchemeBuilder.AddToScheme,
 		v1alpha1cluster.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
 	)

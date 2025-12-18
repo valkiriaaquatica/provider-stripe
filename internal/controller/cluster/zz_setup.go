@@ -9,16 +9,42 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
-	resource "github.com/crossplane/upjet-provider-template/internal/controller/cluster/null/resource"
-	providerconfig "github.com/crossplane/upjet-provider-template/internal/controller/cluster/providerconfig"
+	providerconfig "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/providerconfig"
+	card "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecard/card"
+	coupon "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecoupon/coupon"
+	customer "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripecustomer/customer"
+	entitlementsfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeentitlementsfeature/entitlementsfeature"
+	file "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripefile/file"
+	meter "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripemeter/meter"
+	configuration "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeportalconfiguration/configuration"
+	price "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeprice/price"
+	product "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeproduct/product"
+	productfeature "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeproductfeature/productfeature"
+	promotioncode "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripepromotioncode/promotioncode"
+	shippingrate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripeshippingrate/shippingrate"
+	rate "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripetaxrate/rate"
+	webhookendpoint "github.com/valkiriaaquatica/provider-stripe/internal/controller/cluster/stripewebhookendpoint/webhookendpoint"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.Setup,
 		providerconfig.Setup,
+		card.Setup,
+		coupon.Setup,
+		customer.Setup,
+		entitlementsfeature.Setup,
+		file.Setup,
+		meter.Setup,
+		configuration.Setup,
+		price.Setup,
+		product.Setup,
+		productfeature.Setup,
+		promotioncode.Setup,
+		shippingrate.Setup,
+		rate.Setup,
+		webhookendpoint.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err
@@ -31,8 +57,21 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 // the supplied manager gated.
 func SetupGated(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.SetupGated,
 		providerconfig.SetupGated,
+		card.SetupGated,
+		coupon.SetupGated,
+		customer.SetupGated,
+		entitlementsfeature.SetupGated,
+		file.SetupGated,
+		meter.SetupGated,
+		configuration.SetupGated,
+		price.SetupGated,
+		product.SetupGated,
+		productfeature.SetupGated,
+		promotioncode.SetupGated,
+		shippingrate.SetupGated,
+		rate.SetupGated,
+		webhookendpoint.SetupGated,
 	} {
 		if err := setup(mgr, o); err != nil {
 			return err

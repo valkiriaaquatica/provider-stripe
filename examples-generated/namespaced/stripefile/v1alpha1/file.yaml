@@ -1,0 +1,14 @@
+apiVersion: stripefile.stripe.m.crossplane.io/v1alpha1
+kind: File
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripefile/v1alpha1/file
+  labels:
+    testing.upbound.io/example-name: logo
+  name: logo
+  namespace: crossplane-system
+spec:
+  forProvider:
+    base64content: ${filebase64("${HOME}/logo.jpg")}
+    filename: logo.jpg
+    purpose: business_logo

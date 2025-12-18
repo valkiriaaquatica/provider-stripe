@@ -1,40 +1,982 @@
-name: hashicorp/null
+name: lukasaron/stripe
 resources:
-    null_resource:
+    stripe_card:
         subCategory: ""
-        description: The null_resource resource implements the standard resource lifecycle but takes no further action. On Terraform 1.4 and later, use the terraform_data resource type https://developer.hashicorp.com/terraform/language/resources/terraform-data instead. Terraform 1.9 and later support the moved configuration block from null_resource to terraform_data. The triggers argument allows specifying an arbitrary set of values that, when changed, will cause the resource to be replaced.
-        name: null_resource
-        title: null_resource Resource - terraform-provider-null
+        description: The Stripe Card can be created, modified, configured and removed by this resource.
+        name: stripe_card
+        title: stripe_card
         examples:
-            - name: cluster
+            - name: card
               manifest: |-
                 {
-                  "connection": [
-                    {
-                      "host": "${element(aws_instance.cluster[*].public_ip, 0)}"
-                    }
-                  ],
-                  "provisioner": {
-                    "remote-exec": [
-                      {
-                        "inline": [
-                          "bootstrap-cluster.sh ${join(\" \",\n      aws_instance.cluster[*].private_ip)}"
-                        ]
-                      }
-                    ]
+                  "customer": "${stripe_customer.customer.id}",
+                  "cvc": 123,
+                  "exp_month": 8,
+                  "exp_year": 2030,
+                  "name": "Lukas Aron",
+                  "number": "4242424242424242"
+                }
+              references:
+                customer: stripe_customer.customer.id
+            - name: card
+              manifest: |-
+                {
+                  "address": {
+                    "city": "Sydney",
+                    "country": "Australia",
+                    "line1": "1 The Best Street",
+                    "line2": "Apartment 401",
+                    "state": "NSW",
+                    "zip": "2000"
                   },
-                  "triggers": {
-                    "cluster_instance_ids": "${join(\",\", aws_instance.cluster[*].id)}"
+                  "customer": "${stripe_customer.customer.id}",
+                  "cvc": 123,
+                  "exp_month": 8,
+                  "exp_year": 2030,
+                  "name": "Lukas Aron",
+                  "number": "4242424242424242"
+                }
+              references:
+                customer: stripe_customer.customer.id
+        argumentDocs:
+            address: |-
+                - (Optional) Map(String). Address map with fields related to the address: line1, line2, city, state
+                , zip and country.
+            address_line1_check: |-
+                - String. If address line1 was provided, results of the check: pass, fail, unavailable,
+                or unchecked.
+            address_zip_check: |-
+                - String. If address zip was provided, results of the check: pass, fail, unavailable,
+                or unchecked.
+            available_payout_methods: |-
+                - List(String). A set of available payout methods for this card. Only values from this set
+                should be passed as the method when creating a payout.
+            brand: |-
+                - String. Card brand. Can be American Express, Diners Club, Discover, JCB, MasterCard, UnionPay
+                , Visa, or Unknown.
+            country: |-
+                - String. Two-letter ISO code representing the country of the card. You could use this attribute to get a
+                sense of the international breakdown of cards you’ve collected.
+            customer: '- (Required) String. The customer that this card belongs to.'
+            cvc: |-
+                - (Optional) Int. Card security code. Highly recommended to always include this value, but it's required only
+                for accounts based in European countries.
+            cvc_check: |-
+                - String. If a cvc was provided, results of the check: pass, fail, unavailable, or unchecked. A
+                result of unchecked indicates that CVC was provided but hasn’t been checked yet
+            exp_month: '- (Required) Int. Number representing the card''s expiration month.'
+            exp_year: '- (Required) Int. Four-digit number representing the card''s expiration year.'
+            fingerprint: |-
+                - String. Uniquely identifies this particular card number. You can use this attribute to check whether
+                two customers who’ve signed up with you are using the same card number, for example. For payment methods that tokenize
+                card information (Apple Pay, Google Pay), the tokenized number might be provided instead of the underlying card
+                number.
+            funding: '- String. Card funding type. Can be credit, debit, prepaid, or unknown.'
+            id: '- String. The unique identifier for the object.'
+            last4: '- String. The last four digits of the card.'
+            metadata: |-
+                - (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                storing additional information about the object in a structured format.
+            name: '- (Optional) String. Cardholder name.'
+            number: '- (Required) String. The card number, as a string without any separators.'
+            tokenization_method: |-
+                - String. If the card number is tokenized, this is the method that was used. Can
+                be android_pay (includes Google Pay), apple_pay, masterpass, visa_checkout, or null.
+        importStatements:
+            - $ terraform import stripe_card.card <card_id>
+    stripe_coupon:
+        subCategory: ""
+        description: The Stripe Coupon can be created, modified, configured and removed by this resource.
+        name: stripe_coupon
+        title: stripe_coupon
+        examples:
+            - name: coupon
+              manifest: |-
+                {
+                  "amount_off": 1000,
+                  "currency": "aud",
+                  "duration": "once",
+                  "max_redemptions": 10,
+                  "name": "$10 amount off"
+                }
+            - name: coupon
+              manifest: |-
+                {
+                  "duration": "forever",
+                  "name": "33.3% discount",
+                  "percent_off": 33.3
+                }
+            - name: coupon
+              manifest: |-
+                {
+                  "amount_off": 2000,
+                  "applies_to": [
+                    "${stripe_product.product.id}"
+                  ],
+                  "duration": "once",
+                  "name": "applies to prod with ID 123 till a date",
+                  "redeem_by": "2025-07-23T03:27:06+00:00"
+                }
+              references:
+                applies_to: stripe_product.product.id
+        argumentDocs:
+            amount_off: '- (Optional) Int. Amount (in the currency specified) that will be taken off the subtotal of any invoices for this customer.'
+            applies_to: '- (Optional) List(String). A list of product IDs this coupon applies to.'
+            coupon_id: '- (Optional) String. Unique string of your choice that will be used to identify this coupon when applying it to a customer.'
+            currency: '- (Optional) String. Required if amount_off has been set, the three-letter ISO code for the currency of the amount to take off.'
+            duration: '- (Optional) String. Describes how long a customer who applies this coupon will get the discount. One of forever, once, and repeating.'
+            id: '- String. The unique identifier for the object.'
+            max_redemptions: '- (Optional) Int. Maximum number of times this coupon can be redeemed, in total, across all customers, before it is no longer valid.'
+            metadata: '- (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.'
+            name: '- (Optional) String. Name of the coupon displayed to customers on for instance invoices or receipts.'
+            percent_off: '- (Optional) Float. Percent that will be taken off the subtotal of any invoices for this customer for the duration of the coupon. For example, a coupon with percent_off of 50 will make a $100 invoice $50 instead.'
+            redeem_by: '- (Optional) String. Date after which the coupon can no longer be redeemed. Expected format is in the RFC3339.'
+            times_redeemed: '- Int. Number of times this coupon has been applied to a customer.'
+            valid: '- Bool. Taking account of the above properties, whether this coupon can still be applied to a customer.'
+        importStatements:
+            - $ terraform import stripe_coupon.coupon <coupon_id>
+    stripe_customer:
+        subCategory: ""
+        description: The Stripe Customer can be created, modified, configured and removed by this resource.
+        name: stripe_customer
+        title: stripe_customer
+        examples:
+            - name: customer
+              manifest: '{}'
+            - name: customer
+              manifest: |-
+                {
+                  "description": "Terraform Customer",
+                  "email": "lukas@aron.com",
+                  "name": "Lukas Aron",
+                  "phone": "+610123456789"
+                }
+            - name: customer
+              manifest: |-
+                {
+                  "address": {
+                    "city": "Sydney",
+                    "country": "AU",
+                    "line1": "1 The Best Street",
+                    "line2": "Apartment 401",
+                    "postal_code": "2000",
+                    "state": "New South Wales"
+                  },
+                  "name": "Lukas Aron"
+                }
+            - name: customer
+              manifest: |-
+                {
+                  "balance": 10000,
+                  "invoice_prefix": "LA000",
+                  "invoice_settings": {
+                    "customFieldName": "customFieldValue",
+                    "footer": "--- Lukas Aron ---"
+                  },
+                  "name": "Lukas Aron",
+                  "next_invoice_sequence": 1001,
+                  "preferred_locales": [
+                    "eng",
+                    "esp"
+                  ],
+                  "shipping": {
+                    "city": "Sydney",
+                    "country": "AU",
+                    "line1": "1 The Best Street",
+                    "line2": "Apartment 401",
+                    "name": "Lukas Aron",
+                    "phone": "+610123456789",
+                    "postal_code": "2000",
+                    "state": "New South Wales"
                   }
                 }
-              dependencies:
-                aws_instance.cluster: |-
-                    {
-                      "ami": "ami-0dcc1e21636832c5d",
-                      "count": 3,
-                      "instance_type": "m5.large"
-                    }
         argumentDocs:
-            id: (String) This is set to a random value at create time.
-            triggers: (Map of String) A map of arbitrary strings that, when changed, will force the null resource to be replaced, re-running any associated provisioners.
-        importStatements: []
+            .: '- (Optional) String. The . can be replaced by any string consequently it is considered as custom field name.'
+            address: '- (Optional) Map(String). The customer’s address, for all individual fields see: Address Fields.'
+            balance: '- (Optional) Int. Current balance, if any, being stored on the customer. If negative, the customer has credit to apply to their next invoice. If positive, the customer has an amount owed that will be added to their next invoice. The balance does not refer to any unpaid invoices; it solely takes into account amounts that have yet to be successfully applied to any invoice. This balance is only taken into account as invoices are finalized.'
+            city: '- (Optional) String. City, district, suburb, town, or village.'
+            country: '- (Optional) String. Two-letter country code (ISO 3166-1 alpha-2).'
+            default_invoice_prefix: '- String. The default invoice prefix generated by Stripe when not individual invoice prefix provided.'
+            default_payment_method: '- (Optional) String. ID of a payment method that’s attached to the customer, to be used as the customer’s default payment method for subscriptions and invoices.'
+            description: '- (Optional) String. An arbitrary string that you can attach to a customer object. It is displayed alongside the customer in the dashboard.'
+            email: '- (Optional) String. Customer’s email address. It’s displayed alongside the customer in your dashboard and can be useful for searching and tracking. This may be up to 512 characters.'
+            footer: '- (Optional) String. Default footer to be displayed on invoices for this customer.'
+            invoice_prefix: '- (Optional) String. The prefix for the customer used to generate unique invoice numbers. Must be 3–12 uppercase letters or numbers.'
+            invoice_settings: '- (Optional) Map(String). Default invoice settings for this customer. For supported fields see: Invoice Settings Fields.'
+            line1: '- (Optional) String. Address line 1 (e.g., street, PO Box, or company name).'
+            line2: '- (Optional) String. Address line 2 (e.g., apartment, suite, unit, or building).'
+            metadata: '- (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.'
+            name: '- (Optional) String. The customer’s full name or business name.'
+            next_invoice_sequence: '- (Optional) Int. The sequence to be used on the customer’s next invoice. Defaults to 1.'
+            phone: '- (Optional) String. The customer’s phone number.'
+            postal_code: '- (Optional) String. ZIP or postal code.'
+            preferred_locales: '- (Optional) List(String). Customer’s preferred languages, ordered by preference.'
+            shipping: '- (Optional) Map(String). Mailing and shipping address for the customer. Appears on invoices emailed to this customer. For all individual fields see: Shipping Fields.'
+            state: '- (Optional) String. State, county, province, or region.'
+        importStatements:
+            - $ terraform import stripe_customer.customer <customer_id>
+    stripe_entitlements_feature:
+        subCategory: ""
+        description: The Stripe Product Feature can be created, configured and removed by this resource.
+        name: stripe_entitlements_feature
+        title: stripe_entitlements_feature
+        argumentDocs:
+            entitlements_feature: '- (Required) String. The ID of the Entitlements Feature the product will be attached to'
+            id: '- String. The unique identifier for the object.'
+            livemode: |-
+                - Bool. Has the value true if the object exists in live mode or the value false
+                if the object exists in test mode.
+            product: '- (Required) String. The ID of the product that this Entitlements Feature will be attached to.'
+        importStatements:
+            - $ terraform import stripe_product_feature.product_feature <product_feature_id>
+    stripe_file:
+        subCategory: ""
+        description: The Stripe File can be created by this resource.
+        name: stripe_file
+        title: stripe_file
+        examples:
+            - name: logo
+              manifest: |-
+                {
+                  "base64content": "${filebase64(\"${HOME}/logo.jpg\")}",
+                  "filename": "logo.jpg",
+                  "purpose": "business_logo"
+                }
+            - name: logo
+              manifest: |-
+                {
+                  "base64content": "${filebase64(\"${HOME}/logo.jpg\")}",
+                  "filename": "logo.jpg",
+                  "link_data": [
+                    {
+                      "create": true,
+                      "expires_at": 1826659124
+                    }
+                  ],
+                  "purpose": "business_logo"
+                }
+        argumentDocs:
+            base64content: |-
+                (Required) String. A content file to upload encoded by Base64,
+                ideally use Terraform function filebase64 .
+            create: |-
+                - (Required) Bool. Set this to true to create a file link for the newly created file.
+                Creating a link is only possible when the file’s purpose is one of the following: business_icon, business_logo,
+                customer_signature, dispute_evidence, pci_document, tax_document_user_upload, or terminal_reader_splashscreen.
+            created: '- Int. Time at which the object was created. Measured in seconds since the Unix epoch.'
+            expired: '- Bool. Returns if the link is already expired.'
+            expires_at: '- (Optional) Int. The link isn’t available after this future timestamp.'
+            file_link_data: |-
+                - (Optional) List(Resource). Parameter that automatically create a file link for the newly created file.
+                Please see details File Link Data.
+            filename: '- (Required) String. The suitable name for saving the file to a filesystem.'
+            id: '- String. The unique identifier for the object.'
+            links: |-
+                - List(Resource). A list of file links that point at this file.
+                Please see details of links.
+            livemode: |-
+                - Bool. Has the value true if the object exists in live mode or the value false
+                if the object exists in test mode.
+            metadata: |-
+                - (Optional) Map(String). Set of key-value pairs that you can attach to an object.
+                This can be useful for storing additional information about the object in a structured format.
+            object: '- String. String representing the object’s type. Objects of the same type share the same value.'
+            purpose: |-
+                - (Required) String. The purpose of the uploaded file. One of these values are accepted: account_requirement,
+                additional_verification, business_icon, business_logo, customer_signature, dispute_evidence,
+                document_provider_identity_document, finance_report_run, identity_document, identity_document_downloadable,
+                pci_document, selfie, sigma_scheduled_query, tax_document_user_upload, terminal_reader_splashscreen
+            size: '- Int. The size of the file object in bytes.'
+            type: '- String. The returned file type (for example, csv, pdf, jpg, or png).'
+            url: '- String. Use your live secret API key to download the file from this URL.'
+        importStatements:
+            - $ terraform import stripe_file.file <file_id>
+    stripe_meter:
+        subCategory: ""
+        description: The Stripe Meter can be created, modified and configured by this resource.
+        name: stripe_meter
+        title: stripe_meter
+        examples:
+            - name: sample_meter
+              manifest: |-
+                {
+                  "customer_mapping": [
+                    {
+                      "event_payload_key": "stripe_customer_id",
+                      "type": "by_id"
+                    }
+                  ],
+                  "default_aggregation": [
+                    {
+                      "formula": "sum"
+                    }
+                  ],
+                  "display_name": "A Sample meter",
+                  "event_name": "sample_meter",
+                  "value_settings": [
+                    {
+                      "event_payload_key": "value"
+                    }
+                  ]
+                }
+        argumentDocs:
+            customer_mapping: '- (Optional) Lst(Resource). Fields that specify how to map a meter event to a customer.'
+            day: '- Events are pre-aggregated in daily buckets'
+            default_aggregation: '- (Required) List(Resource). The default settings to aggregate a meter’s events with.'
+            display_name: '- (Required) String. The display name of the meter.'
+            event_name: '- (Required) String. The name of the meter event to record usage for. Corresponds with the event_name field on meter events.'
+            event_payload_key: '- (Required) String. The key in the event payload to use for customer mapping.'
+            event_time_window: '- (Optional) String. The time window to pre-aggregate meter events for, if any. Possible values are:'
+            formula: '- (Required) String. Specifies how events are aggregated. Allowed values are count to count the number of events and sum to sum each event’s value.'
+            hour: '- Events are pre-aggregated in hourly buckets'
+            id: '- String. The unique identifier for the object.'
+            type: '- (Required) String. The method for mapping a meter event to a customer. Must be by_id.'
+            value_settings: '- (Optional) List(Resource). Fields that specify how to calculate a meter event’s value.'
+        importStatements:
+            - $ terraform import stripe_meter.meter <meter_id>
+    stripe_portal_configuration:
+        subCategory: ""
+        description: The Stripe Customer Portal Configuration can be created and modified by this resource.
+        name: stripe_portal_configuration
+        title: stripe_portal_configuration
+        examples:
+            - name: portal_configuration
+              manifest: |-
+                {
+                  "business_profile": [
+                    {
+                      "privacy_policy_url": "https://example.com/privacy",
+                      "terms_of_service_url": "https://example.com/terms"
+                    }
+                  ],
+                  "features": [
+                    {
+                      "payment_method_update": [
+                        {
+                          "enabled": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+            - name: portal_configuration
+              manifest: |-
+                {
+                  "active": false,
+                  "business_profile": [
+                    {
+                      "privacy_policy_url": "https://example.com/privacy",
+                      "terms_of_service_url": "https://example.com/terms"
+                    }
+                  ],
+                  "features": [
+                    {
+                      "payment_method_update": [
+                        {
+                          "enabled": false
+                        }
+                      ]
+                    }
+                  ]
+                }
+            - name: portal_configuration
+              manifest: |-
+                {
+                  "business_profile": [
+                    {
+                      "headline": "My special headline",
+                      "privacy_policy_url": "https://example.com/privacy",
+                      "terms_of_service_url": "https://example.com/terms"
+                    }
+                  ],
+                  "default_return_url": "https://example.com/special_headline",
+                  "features": [
+                    {
+                      "invoice_history": [
+                        {
+                          "enabled": false
+                        }
+                      ],
+                      "payment_method_update": [
+                        {
+                          "enabled": true
+                        }
+                      ]
+                    }
+                  ],
+                  "metadata": {
+                    "campaign": "special headline"
+                  }
+                }
+            - name: portal_configuration
+              manifest: |-
+                {
+                  "business_profile": [
+                    {
+                      "headline": "My special headline",
+                      "privacy_policy_url": "https://example.com/privacy",
+                      "terms_of_service_url": "https://example.com/terms"
+                    }
+                  ],
+                  "default_return_url": "https://example.com/special_headline",
+                  "features": [
+                    {
+                      "customer_update": [
+                        {
+                          "allowed_updates": [
+                            "email",
+                            "address",
+                            "shipping",
+                            "phone",
+                            "tax_id"
+                          ],
+                          "enabled": true
+                        }
+                      ],
+                      "invoice_history": [
+                        {
+                          "enabled": true
+                        }
+                      ],
+                      "payment_method_update": [
+                        {
+                          "enabled": true
+                        }
+                      ],
+                      "subscription_cancel": [
+                        {
+                          "cancellation_reason": [
+                            {
+                              "enabled": true,
+                              "options": [
+                                "too_expensive",
+                                "missing_features",
+                                "switched_service",
+                                "unused",
+                                "customer_service",
+                                "too_complex",
+                                "low_quality",
+                                "other"
+                              ]
+                            }
+                          ],
+                          "enabled": true,
+                          "mode": "at_period_end",
+                          "proration_behavior": "none"
+                        }
+                      ],
+                      "subscription_update": [
+                        {
+                          "default_allowed_updates": [
+                            "price",
+                            "quantity",
+                            "promotion_code"
+                          ],
+                          "enabled": true,
+                          "products": [
+                            {
+                              "prices": [
+                                "my_price_id1",
+                                "my_price_id2"
+                              ],
+                              "product": "my_product_id"
+                            }
+                          ],
+                          "proration_behavior": "none"
+                        }
+                      ]
+                    }
+                  ],
+                  "metadata": {
+                    "foo": "bar"
+                  }
+                }
+        argumentDocs:
+            active: '- (Optional) Bool. Whether the configuration is active and can be used to create portal sessions. (On create it is always set as true)'
+            allowed_updates: '- (Optional) List(String). The types of customer updates that are supported [name, email, address, shipping, phone, tax_id]. When empty, customers are not updatable.'
+            business_profile: '- (Required) List(Resource). The business information shown to customers in the portal. More details in Business Profile section'
+            cancellation_reason: '- (Optional) List(Resource). Whether the cancellation reasons will be collected in the portal and which options are exposed to the customer. Details of this field is in Cancellation Reason.'
+            customer_update: '- (Optional) List(Resource). Information about updating the customer details in the portal. See Customer Update.'
+            default_allowed_updates: '- (Required) List(String). The types of subscription updates that are supported. When empty, subscriptions are not updatable. Supported values are price, quantity, and promotion_code.'
+            default_return_url: '- (Optional) String. The default URL to redirect customers to when they click on the portal’s link to return to your website. This can be overriden when creating the session.'
+            enabled: '- (Required) Bool. Set to true to generate a shareable URL login_page.url that will take your customers to a hosted login page for the customer portal.'
+            features: '- (Required) List(Resource). Information about the features available in the portal. Feature section described in Feature section'
+            headline: '- (Optional) String. The messaging shown to customers in the portal.'
+            id: '- String. Unique identifier for the object.'
+            invoice_history: '- (Optional) List(Resource). Information about showing the billing history in the portal. See Invoice History.'
+            is_default: ': Bool. Whether the configuration is the default.'
+            login_page: '- (Optional) List(Resource). The hosted login page for this configuration. See details in Login Page Section.'
+            metadata: '- (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.'
+            mode: '- (Optional) String. Whether to cancel subscriptions immediately or at the end of the billing period. Valid value is either immediately or at_period_end'
+            options: '- (Required) List(String). Which cancellation reasons will be given as options to the customer. Supported values are too_expensive, missing_features, switched_service, unused, customer_service, too_complex, low_quality, and other.'
+            payment_method_update: '- (Optional) List(Resource). Information about updating payment methods in the portal. See Payment Method Update.'
+            prices: '- (Required) List(String). The list of price IDs for the product that a subscription can be updated to.'
+            privacy_policy_url: '- (Optional) String. A link to the business''s publicly available privacy policy.'
+            product: '- (Required) String. The product id.'
+            products: '- (Required) List(Resource). The list of products that support subscription updates. See details Products.'
+            proration_behavior: '- (Optional) String. Whether to create prorations when canceling subscriptions. Possible values are none and create_prorations, which is only compatible with mode=immediately. No prorations are generated when canceling a subscription at the end of its natural billing period.'
+            subscription_cancel: '- (Optional) List(Resource). Information about canceling subscriptions in the portal. See Subscription Cancel.'
+            subscription_update: '- (Optional) List(Resource). Information about updating subscriptions in the portal. See Subscription Update.'
+            terms_of_service_url: '- (Optional) String. A link to the business''s publicly available terms of service.'
+        importStatements:
+            - $ terraform import stripe_portal_configuration.configuration <portal_configuration_id>
+    stripe_price:
+        subCategory: ""
+        description: The Stripe Price can be created, modified and configured by this resource.
+        name: stripe_price
+        title: stripe_price
+        examples:
+            - name: price
+              manifest: |-
+                {
+                  "currency": "aud",
+                  "product": "${stripe_product.product.id}",
+                  "unit_amount": 100
+                }
+              references:
+                product: stripe_product.product.id
+            - name: price
+              manifest: |-
+                {
+                  "currency": "aud",
+                  "product": "${stripe_product.product.id}",
+                  "unit_amount": -1
+                }
+              references:
+                product: stripe_product.product.id
+            - name: price
+              manifest: |-
+                {
+                  "currency": "aud",
+                  "custom_unit_amount": [
+                    {
+                      "enabled": true,
+                      "maximum": 50000,
+                      "minimum": 500,
+                      "preset": 1000
+                    }
+                  ],
+                  "product": "${stripe_product.product.id}"
+                }
+              references:
+                product: stripe_product.product.id
+            - name: price
+              manifest: |-
+                {
+                  "billing_scheme": "per_unit",
+                  "currency": "aud",
+                  "product": "${stripe_product.product.id}",
+                  "recurring": [
+                    {
+                      "interval": "week",
+                      "interval_count": 1
+                    }
+                  ],
+                  "unit_amount": 100
+                }
+              references:
+                product: stripe_product.product.id
+            - name: price
+              manifest: |-
+                {
+                  "billing_scheme": "tiered",
+                  "currency": "aud",
+                  "product": "${stripe_product.product.id}",
+                  "recurring": [
+                    {
+                      "aggregate_usage": "sum",
+                      "interval": "week",
+                      "interval_count": 2,
+                      "meter": "mtr_1234567890",
+                      "usage_type": "metered"
+                    }
+                  ],
+                  "tiers": [
+                    {
+                      "unit_amount": 0,
+                      "up_to": 10
+                    },
+                    {
+                      "unit_amount": 300,
+                      "up_to": 100
+                    },
+                    {
+                      "unit_amount_decimal": 100.5,
+                      "up_to": -1
+                    }
+                  ],
+                  "tiers_mode": "graduated"
+                }
+              references:
+                product: stripe_product.product.id
+        argumentDocs:
+            active: '- (Optional) Bool. Whether the price can be used for new purchases. Defaults to true.'
+            aggregate_usage: |-
+                - (Optional) String. Specifies a usage of aggregation strategy for prices of usage_type=metered.
+                Allowed values are sum for summing up all usage during a period, last_during_period for using the last usage
+                record reported within a period, last_ever for using the last usage record ever (across period bounds) or max
+                which uses the usage record with the maximum reported usage during a period.
+            billing_scheme: |-
+                - (Optional) String. Describes how to compute the price per period. Either per_unit or tiered
+                . per_unit indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per
+                unit in quantity (for prices with usage_type=licensed), or per unit of total usage (for prices
+                with usage_type=metered). tiered indicates that the unit pricing will be computed using a tiering strategy as
+                defined using the tiers and tiers_mode attributes.
+            currency: '- (Required) String. Three-letter ISO currency code, in lowercase - supported currencies.'
+            currency_options: |-
+                - (Optional) List(Resource). Prices defined in each available currency option. For details
+                of individual arguments see Currency Options.
+            currency_options.currency: '- (Required) String. Three-letter ISO currency code, in lowercase - supported currencies.'
+            currency_options.custom_unit_amount: |-
+                - (Optional) List(Resource). When set,
+                provides configuration for the amount to be adjusted by the customer during Checkout Sessions and Payment Links.
+                See details in Custom Unit Amount.
+            currency_options.custom_unit_amount.enabled: '- (Required) Bool. Pass in true to enable custom_unit_amount, otherwise omit custom_unit_amount.'
+            currency_options.custom_unit_amount.maximum: '- (Optional) Int. The maximum unit amount the customer can specify for this item.'
+            currency_options.custom_unit_amount.minimum: |-
+                - (Optional) Int. The minimum unit amount the customer can specify for this item.
+                Must be at least the minimum charge amount.
+            currency_options.custom_unit_amount.preset: '- (Optional) Int. The starting unit amount which can be updated by the customer.'
+            currency_options.tax_behavior: |-
+                - (Optional) String. Only required if a default tax behavior was not provided in the Stripe Tax settings.
+                Specifies whether the price is considered inclusive of taxes or exclusive of taxes.
+                One of inclusive, exclusive, or unspecified.
+                Once specified as either inclusive or exclusive, it cannot be changed.
+            currency_options.tiers: |-
+                - (Optional) List(Resource). Each element represents a pricing tier.
+                This parameter requires billing_scheme to be set to tiered. This resource can be used more than once and follows
+                the same fields as the root tiers block
+            currency_options.unit_amount: '- (Optional) Int. A positive integer in cents (or -1 for a free price) representing how much to charge.'
+            currency_options.unit_amount_decimal: |-
+                - (Optional) Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+            custom_unit_amount: |-
+                - (Optional) List(Resource). When set, provides configuration for the amount to be adjusted by
+                the customer during Checkout Sessions and Payment Links.
+                For individual fields see Custom Unit Amount.
+            divide_by: '- (Required) Int. Divide usage by this number.'
+            flat_amount: |-
+                - (Optional) Int. The flat billing amount for an entire tier, regardless of the number of units in the
+                tier.
+            flat_amount_decimal: |-
+                - (Optional) Float. Same as flat_amount, but accepts a decimal value representing an integer
+                in the minor units of the currency. Only one of flat_amount and flat_amount_decimal can be set.
+            id: '- String. The unique identifier for the object.'
+            interval: '- (Required) String. Specifies billing frequency. Either day, week, month or year.'
+            interval_count: |-
+                - (Optional) Int. This parameter is (Required) when interval value is set. The number of intervals between subscription billings. For
+                example, interval=month and interval_count=3 bills every 3 months. Maximum of one year interval allowed (1 year,
+                12 months, or 52 weeks).
+            lookup_key: '- (Optional) String. A lookup key used to retrieve prices dynamically from a static string.'
+            metadata: |-
+                - (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                storing additional information about the object in a structured format.
+            meter: '- (Optional) String. The meter tracking the usage of a metered price.'
+            nickname: '- (Optional) String. A brief description of the price, hidden from customers.'
+            product: '- (Required) String. The ID of the product that this price will belong to.'
+            recurring: |-
+                - (Optional) List(Resource). The recurring components of a price such as interval and usage_type. For
+                details of individual arguments see Recurring.
+            round: '- (Required) String. After division, either round the result up or down.'
+            tax_behavior: |-
+                - (Optional) String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                taxes. One of inclusive, exclusive, or unspecified. Once specified as either inclusive or exclusive, it
+                cannot be changed, default is unspecified.
+            tiers: |-
+                - (Optional) List(Resource). Each element represents a pricing tier. This parameter requires billing_scheme
+                to be set to tiered. See also the documentation for billing_scheme. For details of individual arguments
+                see Tiers.
+            tiers_mode: |-
+                - (Required if billing_scheme = tiered) String. Defines if the tiering price should be graduated
+                or volume based. In volume-based tiering, the maximum quantity within a period determines the per-unit price,
+                in graduated tiering pricing can successively change as the quantity grows.
+            transfer_lookup_key: |-
+                - (Optional) Bool. If set to true, will atomically remove the lookup key from the existing
+                price, and assign it to this price.
+            transform_quantity: |-
+                - (Optional) List(Resource). Apply a transformation to the reported usage or set quantity before
+                computing the billed price. Cannot be combined with tiers. For details of individual arguments
+                see Transform Quantity.
+            type: |-
+                - String. One of one_time or recurring depending on whether the price is for a one-time purchase or a
+                recurring (subscription) purchase.
+            unit_amount: |-
+                - (Required unless billing_scheme = tiered) Int. A positive integer in cents (or -1 for a free
+                price) representing how much to charge.
+            unit_amount_decimal: |-
+                - (Optional) Float. Same as unit_amount, but accepts a decimal value in cents with at most 12
+                decimal places. Only one of unit_amount and unit_amount_decimal can be set.
+            up_to: |-
+                - (Required) Int. Specifies the upper bound of this tier. The lower bound of a tier is the upper bound of the
+                previous tier adding one. Use -1 to define a fallback tier.
+            usage_type: |-
+                - (Optional) String. Configures how the quantity per period should be determined. Can be either metered
+                or licensed. licensed automatically bills the quantity set when adding it to a subscription. metered aggregates
+                the total usage based on usage records. Defaults to licensed.
+        importStatements:
+            - $ terraform import stripe_price.price <price_id>
+    stripe_product:
+        subCategory: ""
+        description: The Stripe Product can be created, modified, configured and removed by this resource.
+        name: stripe_product
+        title: stripe_product
+        examples:
+            - name: product
+              manifest: |-
+                {
+                  "name": "minimalist product"
+                }
+            - name: product
+              manifest: |-
+                {
+                  "description": "fantastic product",
+                  "name": "full product",
+                  "unit_label": "piece",
+                  "url": "https://www.terraform.io"
+                }
+        argumentDocs:
+            active: '- (Optional) Bool. Whether the product is currently available for purchase. Defaults to true.'
+            description: '- (Optional) String. The product’s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the product being sold for your own rendering purposes.'
+            id: '- String. The unique identifier for the object.'
+            images: '- (Optional) List(String). A list of up to 8 URLs of images for this product, meant to be displayable to the customer.'
+            marketing_features: '- (Optional) List(String). A list of up to 15 marketing features for this product. These are displayed in pricing tables.'
+            metadata: '- (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.'
+            name: '- (Required) String. The product’s name, meant to be displayable to the customer. Whenever this product is sold via a subscription, name will show up on associated invoice line item descriptions.'
+            package_dimensions: '- (Optional) Map(Float). The dimensions of this product for shipping purposes. When used these fields are required: height,length,width and weight; the precision is 2 decimal places.'
+            product_id: '- (Optional) String. The bespoke unique identifier for the object.'
+            shippable: '- (Optional) Bool. Whether this product is shipped (i.e., physical goods).'
+            statement_descriptor: '- (Optional) String. An arbitrary string to be displayed on your customer’s credit card or bank statement. While most banks display this information consistently, some may display it incorrectly or not at all. This may be up to 22 characters. The statement description may not include <, >, \, ", ’ characters, and will appear on your customer’s statement in capital letters. Non-ASCII characters are automatically stripped. It must contain at least one letter.'
+            tax_code: '- (Optional) String. A tax code ID. Supported values are listed in the TaxCode resource and at https://stripe.com/docs/tax/tax-categories.'
+            unit_label: '- (Optional) String. A label that represents units of this product in Stripe and on customers’ receipts and invoices. When set, this will be included in associated invoice line item descriptions.'
+            url: '- (Optional) String. A URL of a publicly-accessible webpage for this product.'
+        importStatements:
+            - $ terraform import stripe_product.product <product_id>
+    stripe_promotion_code:
+        subCategory: ""
+        description: The Stripe Promotion Code can be created, modified and configured by this resource.
+        name: stripe_promotion_code
+        title: stripe_promotion_code
+        examples:
+            - name: code
+              manifest: |-
+                {
+                  "code": "FREE",
+                  "coupon": "${stripe_coupon.coupon.id}"
+                }
+              references:
+                coupon: stripe_coupon.coupon.id
+            - name: code
+              manifest: |-
+                {
+                  "code": "FREE",
+                  "coupon": "${stripe_coupon.coupon.id}",
+                  "expires_at": "2025-08-03T08:37:18+00:00",
+                  "max_redemptions": 5
+                }
+              references:
+                coupon: stripe_coupon.coupon.id
+            - name: code
+              manifest: |-
+                {
+                  "code": "FREE",
+                  "coupon": "${stripe_coupon.coupon.id}",
+                  "customer": "cus..."
+                }
+              references:
+                coupon: stripe_coupon.coupon.id
+            - name: code
+              manifest: |-
+                {
+                  "code": "FREE",
+                  "coupon": "${stripe_coupon.coupon.id}",
+                  "restrictions": [
+                    {
+                      "first_time_transaction": true,
+                      "minimum_amount": 100,
+                      "minimum_amount_currency": "aud"
+                    }
+                  ]
+                }
+              references:
+                coupon: stripe_coupon.coupon.id
+        argumentDocs:
+            active: '- (Optional) Bool. Whether the promotion code is currently active. Defaults to true.'
+            code: '- (Optional) String. The customer-facing code. Regardless of case, this code must be unique across all active promotion codes for a specific customer. If left blank, we will generate one automatically.'
+            coupon: '- (Required) String. The coupon for this promotion code.'
+            customer: '- (Optional) String. The customer that this promotion code can be used by. If not set, the promotion code can be used by all customers.'
+            expires_at: '- (Optional) String. The timestamp at which this promotion code will expire. If the coupon has specified a redeems_by, then this value cannot be after the coupon’s redeems_by. Expected format is RFC3339.'
+            first_time_transaction: '- (Required) Bool. A Boolean indicating if the Promotion Code should only be redeemed for Customers without any successful payments or invoices.'
+            id: '- String. The unique identifier for the object.'
+            max_redemptions: '- (Optional) Int. A positive integer specifying the number of times the promotion code can be redeemed. If the coupon has specified a max_redemptions, then this value cannot be greater than the coupon’s max_redemptions.'
+            metadata: '- (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.'
+            minimum_amount: '- (Optional) Int. Minimum amount required to redeem this Promotion Code into a Coupon (e.g., a purchase must be $100 or more to work).'
+            minimum_amount_currency: '- (Optional) String. Three-letter ISO code for minimum_amount.'
+            restrictions: '- (Optional) List(Resource). Settings that restrict the redemption of the promotion code. For details of individual arguments see Restrictions.'
+        importStatements:
+            - $ terraform import stripe_promotion_code.code <promotion_code_id>
+    stripe_shipping_rate:
+        subCategory: ""
+        description: The Stripe Shipping Rate can be created, modified and configured by this resource.
+        name: stripe_shipping_rate
+        title: stripe_shipping_rate
+        examples:
+            - name: shipping_rate
+              manifest: |-
+                {
+                  "display_name": "minimal shipping rate",
+                  "fixed_amount": [
+                    {
+                      "amount": 1000,
+                      "currency": "aud"
+                    }
+                  ]
+                }
+            - name: shipping_rate
+              manifest: |-
+                {
+                  "delivery_estimate": [
+                    {
+                      "maximum": [
+                        {
+                          "unit": "day",
+                          "value": 4
+                        }
+                      ],
+                      "minimum": [
+                        {
+                          "unit": "hour",
+                          "value": 24
+                        }
+                      ]
+                    }
+                  ],
+                  "display_name": "shipping rate",
+                  "fixed_amount": [
+                    {
+                      "amount": 1000,
+                      "currency": "aud"
+                    }
+                  ]
+                }
+            - name: shipping
+              manifest: |-
+                {
+                  "display_name": "shipping rate",
+                  "fixed_amount": [
+                    {
+                      "amount": 1000,
+                      "currency": "aud",
+                      "currency_option": [
+                        {
+                          "amount": 350,
+                          "currency": "eur"
+                        },
+                        {
+                          "amount": 500,
+                          "currency": "usd"
+                        }
+                      ]
+                    }
+                  ]
+                }
+        argumentDocs:
+            active: '- (Optional) Bool. Whether the shipping rate is active (can''t be used when creating). Defaults to true.'
+            amount: '- (Required) Int. A non-negative integer in cents representing how much to charge.'
+            currency: '- (Required) String. Three-letter ISO currency code, in lowercase - supported currencies.'
+            currency_option: '- (Optional) List(Resource). Please see argument details Currency Option'
+            delivery_estimate: |-
+                - (Optional) List(Resource). The estimated range for how long shipping will take,
+                meant to be displayable to the customer. This will appear on CheckoutSessions.
+                For details please see Delivery Estimate.
+            display_name: |-
+                - (Required) String. The name of the shipping rate, meant to be displayable to the customer.
+                This will appear on CheckoutSessions.
+            fixed_amount: |-
+                - (Required) List(Resource). Describes a fixed amount to charge for shipping.
+                Must be present if type is fixed_amount. For details of individual arguments see Fixed Amount.
+            id: '- String. The unique identifier for the object.'
+            livemode: '- Bool. Has the value true if the object exists in live mode or the value false if the object exists in test mode.'
+            maximum: |-
+                - (Required) List(Resource. The upper bound of the estimated range.
+                Please see Delivery Estimate Definition.
+            metadata: |-
+                - (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for
+                storing additional information about the object in a structured format.
+            minimum: |-
+                - (Required) List(Resource). The lower bound of the estimated range.
+                Please see Delivery Estimate Definition.
+            tax_behavior: |-
+                - (Optional) String. Specifies whether the price is considered inclusive of taxes or exclusive of
+                taxes. One of inclusive, exclusive, or unspecified. Once specified it cannot be changed, default is unspecified.
+            tax_code: '- (Optional) String. A tax code ID. The Shipping tax code is txcd_92010001.'
+            type: '- (Optional) String. The type of calculation to use on the shipping rate. Can only be fixed_amount for now.'
+            unit: '- (Required) String. A unit of time. Possible values hour, day, business_day, week and month.'
+            value: '- (Required) Int. Must be greater than 0.'
+        importStatements:
+            - $ terraform import stripe_shipping_rate.rate <shipping_rate_id>
+    stripe_tax_rate:
+        subCategory: ""
+        description: The Stripe Tax Rate can be created, modified and configured by this resource.
+        name: stripe_tax_rate
+        title: stripe_tax_rate
+        examples:
+            - name: tax_rate
+              manifest: |-
+                {
+                  "active": true,
+                  "country": "AU",
+                  "description": "GST Australia",
+                  "display_name": "GST",
+                  "inclusive": true,
+                  "jurisdiction": "AU",
+                  "metadata": {},
+                  "percentage": 10,
+                  "state": "",
+                  "tax_type": ""
+                }
+        argumentDocs:
+            active: '- (Optional) Bool. Flag determining whether the tax rate is active or inactive (archived). Inactive tax rates cannot be used with new applications or Checkout Sessions, but will still work for subscriptions and invoices that already have it set.'
+            country: '- (Optional) String. Two-letter country code (ISO 3166-1 alpha-2).'
+            created: '- Int. Time at which the object was created. Measured in seconds since the Unix epoch.'
+            description: '- (Optional) String. An arbitrary string attached to the tax rate for your internal use only. It will not be visible to your customers.'
+            display_name: '- (Required) String. The display name of the tax rate, which will be shown to users.'
+            id: '- String. The unique identifier for the object.'
+            inclusive: '- (Required) Bool. This specifies if the tax rate is inclusive or exclusive.'
+            jurisdiction: '- (Optional) String. The jurisdiction for the tax rate. You can use this label field for tax reporting purposes. It also appears on your customer’s invoice.'
+            livemode: '- Bool. Has the value true if the object exists in live mode or the value false if the object exists in test mode.'
+            metadata: '- (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format. Individual keys can be unset by posting an empty value to them. All keys can be unset by posting an empty value to metadata.'
+            object: '- String. String representing the object’s type. Objects of the same type share the same value.'
+            'percentage ': '- (Required) Float. This represents the tax rate percent out of 100.'
+            state: '- (Optional) String. ISO 3166-2 subdivision code, without country prefix. For example, “NY” for New York, United States.'
+            tax_type: '- (Optional) String. The high-level tax type, such as vat or sales_tax.'
+        importStatements:
+            - $ terraform import stripe_tax_rate.rate <tax_rate_id>
+    stripe_webhook_endpoint:
+        subCategory: ""
+        description: The Stripe Webhook Endpoint can be created, modified, configured and removed by this resource.
+        name: stripe_webhook_endpoint
+        title: stripe_webhook_endpoint
+        examples:
+            - name: webhook
+              manifest: |-
+                {
+                  "description": "example of webhook",
+                  "enabled_events": [
+                    "customer.subscription.created",
+                    "customer.subscription.updated"
+                  ],
+                  "url": "https://webhook-url-consumer.com"
+                }
+        argumentDocs:
+            api_version: '- (Optional) String. Events sent to this endpoint will be generated with this Stripe Version instead of your account’s default Stripe Version.'
+            application: '- String. The ID of the associated Connect application.'
+            connect: '- (Optional) Bool. Whether this endpoint should receive events from connected accounts (true), or from your account (false). Defaults to false.'
+            description: '- (Optional) String. Description of what the webhook is used for.'
+            disabled: '- (Optional) Bool. Disable the webhook endpoint if set to true. Can be used only for modification already existing webhook endpoint.'
+            enabled_events: '- (Required) List(String). The list of events to enable for this endpoint. [*] indicates that all events are enabled, except those that require explicit selection. All supported events listed here: Stripe event types.'
+            id: '- String. The unique identifier for the object.'
+            metadata: '- (Optional) Map(String). Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.'
+            secret: '- String. The endpoint’s secret, used to generate webhook signatures. This field is marked as sensitive.'
+            url: '- (Required) String. The URL of the webhook endpoint.'
+        importStatements:
+            - $ terraform import stripe_webhook_endpoint.webhook <webhook_endpoint_id>

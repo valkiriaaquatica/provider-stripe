@@ -1,0 +1,15 @@
+apiVersion: stripewebhookendpoint.stripe.crossplane.io/v1alpha1
+kind: WebhookEndpoint
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripewebhookendpoint/v1alpha1/webhookendpoint
+  labels:
+    testing.upbound.io/example-name: webhook
+  name: webhook
+spec:
+  forProvider:
+    description: example of webhook
+    enabledEvents:
+    - customer.subscription.created
+    - customer.subscription.updated
+    url: https://webhook-url-consumer.com

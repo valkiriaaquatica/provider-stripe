@@ -1,8 +1,8 @@
 # ====================================================================================
 # Setup Project
 
-PROJECT_NAME ?= upjet-provider-template
-PROJECT_REPO ?= github.com/crossplane/$(PROJECT_NAME)
+PROJECT_NAME ?= provider-stripe
+PROJECT_REPO ?= github.com/valkiriaaquatica/$(PROJECT_NAME)
 
 export TERRAFORM_VERSION ?= 1.5.7
 
@@ -10,12 +10,12 @@ export TERRAFORM_VERSION ?= 1.5.7
 # licensed under BSL, which is not permitted.
 TERRAFORM_VERSION_VALID := $(shell [ "$(TERRAFORM_VERSION)" = "`printf "$(TERRAFORM_VERSION)\n1.6" | sort -V | head -n1`" ] && echo 1 || echo 0)
 
-export TERRAFORM_PROVIDER_SOURCE ?= hashicorp/null
-export TERRAFORM_PROVIDER_REPO ?= https://github.com/hashicorp/terraform-provider-null
-export TERRAFORM_PROVIDER_VERSION ?= 3.2.4
-export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-null
-export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://releases.hashicorp.com/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/$(TERRAFORM_PROVIDER_VERSION)
-export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-null_v3.2.4_x5
+export TERRAFORM_PROVIDER_SOURCE ?= lukasaron/stripe
+export TERRAFORM_PROVIDER_REPO ?= https://github.com/lukasaron/terraform-provider-stripe
+export TERRAFORM_PROVIDER_VERSION ?= 3.4.1
+export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-stripe
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/lukasaron/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/releases/download//v$(TERRAFORM_PROVIDER_VERSION) 
+export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-stripe_v3.4.1_x5
 export TERRAFORM_DOCS_PATH ?= docs/resources
 
 
@@ -49,6 +49,7 @@ GOLANGCILINT_VERSION ?= 2.6.1
 GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider $(GO_PROJECT)/cmd/generator
 GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
 GO_SUBDIRS += cmd internal apis
+export PATH := $(shell go env GOPATH)/bin:$(PATH)
 -include build/makelib/golang.mk
 
 # ====================================================================================
@@ -65,17 +66,17 @@ CROSSPLANE_VERSION = 2.1.1
 # ====================================================================================
 # Setup Images
 
-REGISTRY_ORGS ?= ghcr.io/crossplane-contrib
+REGISTRY_ORGS ?= xpkg.upbound.io/valkiriaaquaticamendi
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
 
 # ====================================================================================
 # Setup XPKG
 
-XPKG_REG_ORGS ?= ghcr.io/crossplane-contrib
+XPKG_REG_ORGS ?= xpkg.upbound.io/valkiriaaquaticamendi
 # NOTE(hasheddan): skip promoting on xpkg.crossplane.io as channel tags are
 # inferred.
-XPKG_REG_ORGS_NO_PROMOTE ?= ghcr.io/crossplane-contrib
+XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/valkiriaaquaticamendi
 XPKGS = $(PROJECT_NAME)
 -include build/makelib/xpkg.mk
 
@@ -95,7 +96,7 @@ fallthrough: submodules
 
 # NOTE(hasheddan): we force image building to happen prior to xpkg build so that
 # we ensure image is present in daemon.
-xpkg.build.upjet-provider-template: do.build.images
+xpkg.build.provider-stripe: do.build.images
 
 # NOTE(hasheddan): we ensure up is installed prior to running platform-specific
 # build steps in parallel to avoid encountering an installation race condition.
@@ -137,6 +138,7 @@ pull-docs:
 	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
 generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
+	@command -v goimports >/dev/null 2>&1 || $(GOHOST) install golang.org/x/tools/cmd/goimports@latest
 
 .PHONY: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs check-terraform-version
 # ====================================================================================

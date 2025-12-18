@@ -1,0 +1,14 @@
+apiVersion: stripeshippingrate.stripe.crossplane.io/v1alpha1
+kind: ShippingRate
+metadata:
+  annotations:
+    meta.upbound.io/example-id: stripeshippingrate/v1alpha1/shippingrate
+  labels:
+    testing.upbound.io/example-name: shipping_rate
+  name: shipping-rate
+spec:
+  forProvider:
+    displayName: minimal shipping rate
+    fixedAmount:
+    - amount: 1000
+      currency: aud
