@@ -11,7 +11,7 @@ on:
 
 env:
   # Common versions
-  GO_VERSION: '1.21'
+  GO_VERSION: '1.24.10'
   GOLANGCI_VERSION: 'v1.54.0'
   DOCKER_BUILDX_VERSION: 'v0.8.2'
 
@@ -151,7 +151,7 @@ jobs:
 
       - name: debug
         run: |
-          tree .work
+          tree .work || true
 
       - name: Check Diff
         run: |
